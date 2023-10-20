@@ -8,7 +8,13 @@ export const colors = {
   gray400: '#999999',
   gray500: '#BBBBBB',
   gray600: '#DDDDDD',
-  primary: '#1976D2',
+  theme: {
+    gray: '#373E40',
+    light_gray: '#9899A6',
+    green: '#80ED99',
+    red: '#C3423F',
+    orange: '#FBB13C',
+  },
   error: {
     main: '#d32f2f',
     dark: '#c62828',
@@ -20,7 +26,7 @@ export const colors = {
 };
 
 export const fonts = {
-  body: 'Roboto, sans-serif',
-  heading: 'Roboto, sans-serif',
-  logo: "'Source Sans 3', sans-serif",
+  body: '"Roboto Slab", serif',
+  heading: '"DM Serif Display","Roboto Slab", serif',
+  mono: "'PT Mono',monospace, sans-serif",
 };
