@@ -1,18 +1,45 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 import { colors } from '../utils/variables';
 import _ from 'lodash';
 import { useContext } from 'react';
-import ParticipantContext from '../context/ParticipantContext';
+import InitiativeContext from '../context/InitiativeContext';
 import RowButton from './RowButton';
 import { transparentize } from 'polished';
+import { keyframes } from 'styled-components';
 
 const Flex = styled.div`
   display: grid;
   grid-template-columns: 5em 1fr 5em 5em 8em;
+  ${(props) => {
+    if (props.$dragging === props.$index) {
+      return css`
+        pointer-events: none;
+        touch-action: none;
+        -ms-touch-action: none;
+      `;
+    }
+  }}
 `;
 
-const Active = styled.div``;
+const blinkAnim = keyframes`
+  0% {opacity: 1}
+  50% {opacity: 0}
+  100% {opacity: 1}
+`;
+
+const Active = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${colors.pure_white};
+  animation-name: ${blinkAnim};
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  span {
+    font-size: 2.5rem;
+  }
+`;
 
 const Div = styled.div`
   position: relative;
@@ -53,41 +80,51 @@ const SkullButton = styled.button`
   }
 `;
 
-const Row = ({ children, status, name, action }) => {
-  const { partValues, setPartValues } = useContext(ParticipantContext);
+const Row = ({ children, status, name, action, dragging, index }) => {
+  const { initValues, setInitValues } = useContext(InitiativeContext);
+  const { participants, active } = initValues;
 
   const handleClear = () => {
-    const updatedValues = partValues.map((part) => {
+    const updatedValues = participants.map((part) => {
       if (part.name === name) {
         return { ...part, action: 'normal' };
       }
       return part;
     });
-    setPartValues(updatedValues);
+    setInitValues({
+      ...initValues,
+      participants: updatedValues,
+    });
   };
 
   const handleDelay = () => {
-    const updatedValues = partValues.map((part) => {
+    const updatedValues = participants.map((part) => {
       if (part.name === name) {
         return { ...part, action: 'delay' };
       }
       return part;
     });
-    setPartValues(updatedValues);
+    setInitValues({
+      ...initValues,
+      participants: updatedValues,
+    });
   };
 
   const handleReady = () => {
-    const updatedValues = partValues.map((part) => {
+    const updatedValues = participants.map((part) => {
       if (part.name === name) {
         return { ...part, action: 'ready' };
       }
       return part;
     });
-    setPartValues(updatedValues);
+    setInitValues({
+      ...initValues,
+      participants: updatedValues,
+    });
   };
 
   const handleDying = (status) => {
-    const updatedValues = partValues.map((part) => {
+    const updatedValues = participants.map((part) => {
       if (part.name === name) {
         if (part.status === status) {
           switch (part.status) {
@@ -104,12 +141,19 @@ const Row = ({ children, status, name, action }) => {
       }
       return part;
     });
-    setPartValues(updatedValues);
+    setInitValues({
+      ...initValues,
+      participants: updatedValues,
+    });
   };
 
   return (
-    <Flex>
-      <Active></Active>
+    <Flex $dragging={dragging} $index={index}>
+      <Active>
+        {active === name && (
+          <span className="material-symbols-outlined">arrow_right</span>
+        )}
+      </Active>
       <Div>
         {action !== 'normal' && (
           <RowButton onClick={handleClear} style={{ position: 'absolute' }}>
@@ -182,4 +226,6 @@ Row.propTypes = {
   status: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   action: PropTypes.string.isRequired,
+  dragging: PropTypes.number,
+  index: PropTypes.number.isRequired,
 };

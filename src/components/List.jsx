@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import Participant from './Participant';
 import Row from './Row';
-import { useContext } from 'react';
-import ParticipantContext from '../context/ParticipantContext';
+import { useContext, useRef, useState } from 'react';
+import InitiativeContext from '../context/InitiativeContext';
 
 const Flex = styled.div`
   display: flex;
@@ -11,18 +11,110 @@ const Flex = styled.div`
 `;
 
 const List = () => {
-  const { partValues } = useContext(ParticipantContext);
+  const { initValues } = useContext(InitiativeContext);
+  const [isDragging, setDragging] = useState();
+
+  const containerRef = useRef();
+
+  function startDrag(e, index) {
+    if (!detectLeftButton(e)) return;
+
+    setDragging(index);
+
+    // set the container ref and grab the dragged item based on that
+    const container = containerRef.current;
+    const items = [...container.childNodes];
+    const dragItem = items[index];
+    const itemsBelowDragItem = items.slice(index + 1);
+
+    // get original position of mouse
+    let x = e.clientX;
+    let y = e.clientY;
+
+    // perform function on hover
+    document.onpointermove = dragMove;
+
+    function dragMove(e) {
+      // calculate move distance
+      const posX = e.clientX - x;
+      const posY = e.clientY - y;
+
+      dragItem.style.transform = `translate(${posX}px, ${posY}px)`;
+    }
+
+    const dragBoundingRect = dragItem.getBoundingClientRect();
+
+    const space =
+      items[1].getBoundingClientRect().top -
+      items[0].getBoundingClientRect().bottom;
+
+    // set dragging styles for element being dragged
+    dragItem.style.position = 'fixed';
+    dragItem.style.zIndex = 5000;
+    dragItem.style.width = dragBoundingRect.width + 'px';
+    dragItem.style.height = dragBoundingRect.height + 'px';
+    dragItem.style.top = dragBoundingRect.top + 'px';
+    dragItem.style.left = dragBoundingRect.left + 'px';
+    dragItem.style.cursor = 'grabbing';
+
+    // build the placeholder element
+    const div = document.createElement('div');
+    div.id = 'div-temp';
+    div.style.width = dragBoundingRect.width + 'px';
+    div.style.height = dragBoundingRect.height + 'px';
+    div.style.pointerEvents = 'none';
+    container.appendChild(div);
+
+    const distance = dragBoundingRect.height + space;
+
+    itemsBelowDragItem.forEach((item) => {
+      item.style.transform = `translateY(${distance}px)`;
+    });
+
+    document.onpointerup = dragEnd;
+    // end the drag
+    function dragEnd() {
+      document.onpointerup = '';
+      document.onpointermove = '';
+
+      setDragging(undefined);
+      dragItem.style = '';
+
+      container.removeChild(div);
+
+      items.forEach((item) => (item.style = ''));
+    }
+  }
+
+  const detectLeftButton = (e) => {
+    if ('buttons' in e) {
+      return e.buttons === 1;
+    }
+
+    let button = e.which || e.button;
+    return button === 1;
+  };
+
   return (
-    <Flex>
-      {partValues.map((part) => {
+    <Flex ref={containerRef}>
+      {initValues.participants.map((part, index) => {
         const { name, type, initiative, action, status } = part;
         return (
-          <Row key={name} status={status} name={name} action={action}>
+          <Row
+            key={name}
+            status={status}
+            name={name}
+            action={action}
+            dragging={isDragging}
+            index={index}
+          >
             <Participant
               name={name}
               type={type}
               initiative={initiative}
               action={action}
+              index={index}
+              startDrag={startDrag}
             />
           </Row>
         );

@@ -121,25 +121,27 @@ const Actions = styled.div`
   align-items: center;
 `;
 
-const Participant = ({ name, type = 'pc', initiative, action = 'normal' }) => {
-  const handleUp = () => {
-    console.log('up');
-  };
-
-  const handleDown = () => {
-    console.log('down');
-  };
-
+const Participant = ({
+  name,
+  type = 'pc',
+  initiative,
+  action = 'normal',
+  index,
+  startDrag,
+}) => {
   return (
     <Div type={type} action={action}>
+      <Actions>
+        <IconButton
+          icon="drag_indicator"
+          onPointerDown={startDrag}
+          index={index}
+        />
+      </Actions>
       <NameAndType>
         <TypeIcon type={type} />
         <Name>{name}</Name>
       </NameAndType>
-      <Actions>
-        <IconButton icon="arrow_downward" onClick={handleDown} />
-        <IconButton icon="arrow_upward" onClick={handleUp} />
-      </Actions>
       <Initiative type={type}>{initiative}</Initiative>
     </Div>
   );
@@ -152,4 +154,6 @@ Participant.propTypes = {
   type: PropTypes.oneOf(['pc', 'ally', 'foe', 'hazard']).isRequired,
   initiative: PropTypes.number.isRequired,
   action: PropTypes.oneOf(['normal', 'ready', 'delay']).isRequired,
+  index: PropTypes.number.isRequired,
+  startDrag: PropTypes.func.isRequired,
 };

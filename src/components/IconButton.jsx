@@ -15,9 +15,9 @@ const Button = styled.button`
   color: ${colors.pure_white};
 `;
 
-const IconButton = ({ onClick, icon }) => {
+const IconButton = ({ onPointerDown, icon, index }) => {
   return (
-    <Button onClick={onClick}>
+    <Button onPointerDown={(e) => onPointerDown(e, index)}>
       <span className="material-symbols-outlined">{icon}</span>
     </Button>
   );
@@ -26,6 +26,7 @@ const IconButton = ({ onClick, icon }) => {
 export default IconButton;
 
 IconButton.propTypes = {
-  onClick: PropTypes.func.isRequired,
+  onPointerDown: PropTypes.func.isRequired,
   icon: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
 };
