@@ -11,7 +11,8 @@ export const colors = {
   theme: {
     gray: '#373E40',
     light_gray: '#9899A6',
-    green: '#80ED99',
+    blue: '#19647E',
+    green: '#419D78',
     red: '#C3423F',
     orange: '#FBB13C',
   },

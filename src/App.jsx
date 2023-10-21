@@ -1,5 +1,9 @@
+import styled from 'styled-components';
 import Header from './components/Header';
-import Participant from './components/Participant';
+import List from './components/List';
+import Initiative from './components/Initiative';
+import ParticipantContext from './context/ParticipantContext';
+import { useState } from 'react';
 
 const PARTS = [
   {
@@ -7,14 +11,14 @@ const PARTS = [
     type: 'pc',
     initiative: 25,
     action: 'normal',
-    status: 'alive',
+    status: 'dying1',
     conditions: [],
   },
   {
     name: 'Red Dragon',
     type: 'foe',
     initiative: 15,
-    action: 'normal',
+    action: 'delay',
     status: 'alive',
     conditions: [],
   },
@@ -22,7 +26,7 @@ const PARTS = [
     name: 'Denithorne',
     type: 'ally',
     initiative: 31,
-    action: 'normal',
+    action: 'ready',
     status: 'alive',
     conditions: ['frightened'],
   },
@@ -36,25 +40,23 @@ const PARTS = [
   },
 ];
 
+const Main = styled.main`
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+`;
+
 function App() {
+  const [partValues, setPartValues] = useState(PARTS);
   return (
-    <>
+    <ParticipantContext.Provider value={{ partValues, setPartValues }}>
       <Header />
-      {PARTS.map((part) => {
-        const { name, type, initiative, action, status, conditions } = part;
-        return (
-          <Participant
-            key={name}
-            name={name}
-            type={type}
-            initiative={initiative}
-            action={action}
-            status={status}
-            conditions={conditions}
-          />
-        );
-      })}
-    </>
+      <Main>
+        <Initiative>
+          <List />
+        </Initiative>
+      </Main>
+    </ParticipantContext.Provider>
   );
 }
 
