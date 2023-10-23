@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import styled from 'styled-components';
+import Header from './components/Header';
+import List from './components/List';
+import Initiative from './components/Initiative';
+import InitiativeContext from './context/InitiativeContext';
+import { useEffect, useState } from 'react';
+import { addTouchClass } from './utils/helpers';
+import Notes from './components/Notes';
+import { breakpoints } from './utils/variables';
+import Empty from './components/Empty';
+
+const INIT = {
+  active: undefined,
+  round: undefined,
+  participants: [],
+};
+
+const Main = styled.main`
+  padding: 0 1rem 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1rem;
+
+  @media only screen and (max-width: ${breakpoints.md}) {
+    grid-template-columns: 1fr;
+  }
+`;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [initValues, setInitValues] = useState(INIT);
 
+  useEffect(() => {
+    addTouchClass();
+  }, []);
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <InitiativeContext.Provider value={{ initValues, setInitValues }}>
+      <Header />
+      <Main>
+        <Initiative>
+          {initValues.participants.length > 0 ? <List /> : <Empty />}
+        </Initiative>
+        <Notes />
+      </Main>
+    </InitiativeContext.Provider>
+  );
 }
 
-export default App
+export default App;
