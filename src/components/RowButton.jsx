@@ -8,9 +8,10 @@ const Button = styled.button`
   align-items: center;
   border: none;
   background-color: ${transparentize(0.75, colors.black)};
-  color: ${colors.theme.orange};
+  color: ${colors.white};
   border-radius: 0.25rem;
-  min-height: 2rem;
+  min-height: 2.5rem;
+  justify-content: center;
   padding: 0.25rem 0.5rem;
   cursor: pointer;
   opacity: ${(props) => (props.hidden ? 0 : null)};
@@ -18,6 +19,7 @@ const Button = styled.button`
 
   &:hover {
     opacity: ${(props) => (props.hidden ? 1 : null)};
+    color: ${colors.theme.orange};
   }
 `;
 

@@ -12,12 +12,35 @@ const Button = styled.button`
   border-radius: 50%;
   border: none;
   background-color: ${transparentize(0.75, colors.black)};
-  color: ${colors.pure_white};
+  color: ${(props) =>
+    props.$subtle ? transparentize(0.5, colors.pure_white) : colors.pure_white};
+  cursor: pointer;
+  opacity: ${(props) => (props.$hidden ? 0 : null)};
+  transition:
+    opacity 0.3s,
+    color 0.3s;
+
+  &:hover {
+    opacity: ${(props) => (props.$hidden ? 1 : null)};
+    background-color: ${transparentize(0.5, colors.black)};
+    color: ${colors.pure_white};
+  }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
 `;
 
-const IconButton = ({ onPointerDown, icon, index }) => {
+const IconButton = ({ onClick, icon, hidden, $subtle, disabled, ...props }) => {
   return (
-    <Button onPointerDown={(e) => onPointerDown(e, index)}>
+    <Button
+      onClick={onClick}
+      {...props}
+      $hidden={hidden}
+      $subtle={$subtle}
+      disabled={disabled}
+    >
       <span className="material-symbols-outlined">{icon}</span>
     </Button>
   );
@@ -26,7 +49,9 @@ const IconButton = ({ onPointerDown, icon, index }) => {
 export default IconButton;
 
 IconButton.propTypes = {
-  onPointerDown: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
   icon: PropTypes.string.isRequired,
-  index: PropTypes.number.isRequired,
+  hidden: PropTypes.bool,
+  $subtle: PropTypes.bool,
+  disabled: PropTypes.bool,
 };

@@ -75,7 +75,7 @@ const StyledButton = styled.button`
     }
   }}
   display: flex;
-  font-family: ${fonts.body};
+  font-family: ${fonts.button};
   align-items: center;
   justify-content: center;
   white-space: nowrap;
@@ -104,6 +104,7 @@ const Button = ({
   size,
   square = false,
   unrounded = false,
+  ...props
 }) => {
   return (
     <StyledButton
@@ -115,6 +116,7 @@ const Button = ({
       size={size}
       $square={square}
       $unrounded={unrounded}
+      {...props}
     >
       {children}
     </StyledButton>

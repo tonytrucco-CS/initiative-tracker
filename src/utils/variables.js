@@ -30,4 +30,15 @@ export const fonts = {
   body: '"Roboto Slab", serif',
   heading: '"DM Serif Display","Roboto Slab", serif',
   mono: "'PT Mono',monospace, sans-serif",
+  button: 'Roboto, sans-serif',
+};
+
+export const breakpoints = {
+  xxl: '120em',
+  xl: '100em',
+  lg: '85.375em',
+  md: '64em',
+  sm: '48em',
+  xs: '32em',
+  xxs: '25.6875em',
 };

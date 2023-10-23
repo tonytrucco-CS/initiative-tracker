@@ -8,10 +8,13 @@ const Flex = styled.div`
   display: flex;
   gap: 0.25rem;
   flex-direction: column;
+  touch-action: none;
+  -ms-touch-action: none;
 `;
 
 const List = () => {
-  const { initValues } = useContext(InitiativeContext);
+  const { initValues, setInitValues } = useContext(InitiativeContext);
+  const { participants } = initValues;
   const [isDragging, setDragging] = useState();
 
   const containerRef = useRef();
@@ -26,9 +29,11 @@ const List = () => {
     const items = [...container.childNodes];
     const dragItem = items[index];
     const itemsBelowDragItem = items.slice(index + 1);
+    const notDragItems = items.filter((_, i) => i !== index);
+    const dragData = participants[index];
+    let newParticipants = participants;
 
     // get original position of mouse
-    let x = e.clientX;
     let y = e.clientY;
 
     // perform function on hover
@@ -36,10 +41,38 @@ const List = () => {
 
     function dragMove(e) {
       // calculate move distance
-      const posX = e.clientX - x;
       const posY = e.clientY - y;
 
-      dragItem.style.transform = `translate(${posX}px, ${posY}px)`;
+      // move the items
+      dragItem.style.transform = `translateY(${posY}px)`;
+
+      // swap position and data
+      notDragItems.forEach((item) => {
+        // check for overlap
+        const rect1 = dragItem.getBoundingClientRect();
+        const rect2 = item.getBoundingClientRect();
+
+        let isOverlapping =
+          rect1.y < rect2.y + rect2.height / 2 &&
+          rect1.y + rect1.height / 2 > rect2.y;
+
+        if (isOverlapping) {
+          // swap position
+          if (item.getAttribute('style')) {
+            item.style.transform = '';
+            index++;
+          } else {
+            item.style.transform = `translateY(${distance}px)`;
+            index--;
+          }
+
+          // swap data
+          newParticipants = participants.filter(
+            (item) => item.name !== dragData.name,
+          );
+          newParticipants.splice(index, 0, dragData);
+        }
+      });
     }
 
     const dragBoundingRect = dragItem.getBoundingClientRect();
@@ -83,6 +116,11 @@ const List = () => {
       container.removeChild(div);
 
       items.forEach((item) => (item.style = ''));
+
+      setInitValues({
+        ...initValues,
+        participants: newParticipants,
+      });
     }
   }
 
@@ -97,11 +135,11 @@ const List = () => {
 
   return (
     <Flex ref={containerRef}>
-      {initValues.participants.map((part, index) => {
+      {participants.map((part, index) => {
         const { name, type, initiative, action, status } = part;
         return (
           <Row
-            key={name}
+            key={index}
             status={status}
             name={name}
             action={action}

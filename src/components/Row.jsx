@@ -4,9 +4,9 @@ import { colors } from '../utils/variables';
 import _ from 'lodash';
 import { useContext } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
-import RowButton from './RowButton';
 import { transparentize } from 'polished';
 import { keyframes } from 'styled-components';
+import IconButton from './IconButton';
 
 const Flex = styled.div`
   display: grid;
@@ -17,6 +17,7 @@ const Flex = styled.div`
         pointer-events: none;
         touch-action: none;
         -ms-touch-action: none;
+        background-color: ${colors.theme.gray};
       `;
     }
   }}
@@ -26,6 +27,12 @@ const blinkAnim = keyframes`
   0% {opacity: 1}
   50% {opacity: 0}
   100% {opacity: 1}
+`;
+
+const RemoveActive = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const Active = styled.div`
@@ -147,38 +154,68 @@ const Row = ({ children, status, name, action, dragging, index }) => {
     });
   };
 
+  const handleRemove = () => {
+    const toRemove = index;
+    setInitValues((prevInit) => ({
+      ...prevInit,
+      participants: prevInit.participants.filter(
+        (_, index) => index !== toRemove,
+      ),
+    }));
+  };
+
   return (
     <Flex $dragging={dragging} $index={index}>
-      <Active>
-        {active === name && (
-          <span className="material-symbols-outlined">arrow_right</span>
-        )}
-      </Active>
+      <RemoveActive>
+        <IconButton
+          icon="delete"
+          onClick={handleRemove}
+          $subtle
+          tabIndex={-1}
+        />
+        <Active>
+          {active === index && (
+            <span className="material-symbols-outlined">arrow_right</span>
+          )}
+        </Active>
+      </RemoveActive>
       <Div>
         {action !== 'normal' && (
-          <RowButton onClick={handleClear} style={{ position: 'absolute' }}>
-            <span className="material-symbols-outlined">arrow_left_alt</span>
-            Reset
-          </RowButton>
+          <IconButton
+            onClick={handleClear}
+            icon={'arrow_left_alt'}
+            style={{ position: 'absolute' }}
+            tabIndex={-1}
+          />
         )}
         {children}
       </Div>
       <Action>
         {action === 'normal' && (
-          <RowButton onClick={handleDelay} hidden>
-            Delay
-          </RowButton>
+          <IconButton
+            icon={'chevron_right'}
+            onClick={handleDelay}
+            hidden
+            tabIndex={-1}
+          />
         )}
       </Action>
       <Action>
         {(action === 'normal' || action === 'delay') && (
-          <RowButton onClick={handleReady} hidden>
-            Ready
-          </RowButton>
+          <IconButton
+            onClick={handleReady}
+            icon={'keyboard_double_arrow_right'}
+            hidden
+            tabIndex={-1}
+          />
         )}
       </Action>
       <Dying>
-        <SkullButton onClick={() => handleDying('dying1')} $status={status}>
+        <SkullButton
+          onClick={() => handleDying('dying1')}
+          $status={status}
+          tabIndex={-1}
+        >
           <span
             className="material-symbols-outlined"
             style={{
@@ -193,7 +230,11 @@ const Row = ({ children, status, name, action, dragging, index }) => {
             skull
           </span>
         </SkullButton>
-        <SkullButton onClick={() => handleDying('dying2')} $status={status}>
+        <SkullButton
+          onClick={() => handleDying('dying2')}
+          $status={status}
+          tabIndex={-1}
+        >
           <span
             className="material-symbols-outlined"
             style={{
@@ -204,7 +245,11 @@ const Row = ({ children, status, name, action, dragging, index }) => {
             skull
           </span>
         </SkullButton>
-        <SkullButton onClick={() => handleDying('dying3')} $status={status}>
+        <SkullButton
+          onClick={() => handleDying('dying3')}
+          $status={status}
+          tabIndex={-1}
+        >
           <span
             className="material-symbols-outlined"
             style={{

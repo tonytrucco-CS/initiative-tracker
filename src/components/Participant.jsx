@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { colors, fonts } from '../utils/variables';
 import TypeIcon from './TypeIcon';
 import { transparentize } from 'polished';
-import IconButton from './IconButton';
+import DragButton from './DragButton';
+import { useContext } from 'react';
+import InitiativeContext from '../context/InitiativeContext';
 
 const Div = styled.div`
   display: flex;
@@ -11,17 +13,18 @@ const Div = styled.div`
   border-radius: 0.25rem;
   transition: transform 0.6s;
   transition-timing-function: ease-in-out;
+  cursor: default;
   ${(props) => {
     switch (props.action) {
       case 'normal':
         return css``;
       case 'delay':
         return css`
-          transform: translateX(5em);
+          transform: translateX(2.5em);
         `;
       case 'ready':
         return css`
-          transform: translateX(10em);
+          transform: translateX(7.5em);
         `;
       default:
         return css``;
@@ -69,28 +72,36 @@ const NameAndType = styled.span`
   gap: 3px;
 `;
 
-const Name = styled.div`
+const Input = styled.input`
   background-color: ${colors.gray600};
   border-radius: 0.25rem;
   height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  border: none;
+  font-family: ${fonts.body};
+  font-size: 1rem;
   flex: 1;
   padding-left: 0.5rem;
+
+  &:focus {
+    outline: none;
+    background-color: ${colors.white};
+  }
 `;
 
-const Initiative = styled.span`
+const Initiative = styled.input`
+  border-radius: 0.25rem;
   padding: 0.5rem;
   height: 2.5rem;
   width: 2.5rem;
-  align-items: center;
-  justify-content: flex-end;
-  display: flex;
+  text-align: right;
+  font-size: 1rem;
   font-family: ${fonts.mono};
   font-weight: 800;
+  background-color: transparent;
+  border: none;
+  margin-left: 0.25rem;
   ${(props) => {
-    switch (props.type) {
+    switch (props.$type) {
       case 'pc':
         return css`
           color: ${transparentize(0.15, colors.white)};
@@ -111,6 +122,16 @@ const Initiative = styled.span`
         return css``;
     }
   }}
+
+  &:hover {
+    cursor: pointer;
+    background-color: ${transparentize(0.9, colors.black)};
+  }
+
+  &:focus {
+    outline: none;
+    background-color: ${transparentize(0.75, colors.black)};
+  }
 `;
 
 const Actions = styled.div`
@@ -129,20 +150,62 @@ const Participant = ({
   index,
   startDrag,
 }) => {
+  const { setInitValues } = useContext(InitiativeContext);
+
+  const handleName = (e) => {
+    setInitValues((prevInit) => {
+      const updatedParticipants = [...prevInit.participants];
+      updatedParticipants[index] = {
+        ...updatedParticipants[index],
+        name: e.target.value,
+      };
+      return { ...prevInit, participants: updatedParticipants };
+    });
+  };
+
+  const handleInit = (e) => {
+    setInitValues((prevInit) => {
+      const updatedParticipants = [...prevInit.participants];
+      updatedParticipants[index] = {
+        ...updatedParticipants[index],
+        initiative: Number(e.target.value),
+      };
+      return { ...prevInit, participants: updatedParticipants };
+    });
+  };
+
+  const handleSelect = (e) => {
+    e.target.select();
+  };
   return (
     <Div type={type} action={action}>
       <Actions>
-        <IconButton
+        <DragButton
           icon="drag_indicator"
           onPointerDown={startDrag}
           index={index}
+          tabIndex={-1}
         />
       </Actions>
       <NameAndType>
         <TypeIcon type={type} />
-        <Name>{name}</Name>
+        <Input
+          type="text"
+          placeholder="Name this Participant"
+          value={name}
+          name="Participant"
+          onChange={(e) => handleName(e)}
+          onClick={handleSelect}
+        />
       </NameAndType>
-      <Initiative type={type}>{initiative}</Initiative>
+      <Initiative
+        $type={type}
+        type="text"
+        value={initiative}
+        name="Initiative"
+        onChange={(e) => handleInit(e)}
+        onClick={handleSelect}
+      />
     </Div>
   );
 };
