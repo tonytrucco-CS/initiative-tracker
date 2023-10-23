@@ -98,6 +98,16 @@ const Initiative = styled.input`
   font-family: ${fonts.mono};
   font-weight: 800;
   background-color: transparent;
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  &[type='number'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
   border: none;
   margin-left: 0.25rem;
   ${(props) => {
@@ -200,7 +210,7 @@ const Participant = ({
       </NameAndType>
       <Initiative
         $type={type}
-        type="text"
+        type="number"
         value={initiative}
         name="Initiative"
         onChange={(e) => handleInit(e)}
