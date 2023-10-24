@@ -1,10 +1,8 @@
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 import { colors } from '../utils/variables';
-import _ from 'lodash';
 import { useContext } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
-import { transparentize } from 'polished';
 import { keyframes } from 'styled-components';
 import IconButton from './IconButton';
 
@@ -14,9 +12,6 @@ const Flex = styled.div`
   ${(props) => {
     if (props.$dragging === props.$index) {
       return css`
-        pointer-events: none;
-        touch-action: none;
-        -ms-touch-action: none;
         background-color: ${colors.theme.gray};
       `;
     }
@@ -66,27 +61,6 @@ const Dying = styled.div`
   align-items: center;
 `;
 
-const SkullButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${(props) =>
-    _.includes(props.$status, 'dying')
-      ? colors.white
-      : transparentize(0.75, colors.white)};
-  border: none;
-  cursor: pointer;
-  border-radius: 50%;
-  width: 2.25rem;
-  height: 2.25rem;
-  background-color: ${transparentize(1, colors.black)};
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: ${transparentize(0.5, colors.black)};
-  }
-`;
-
 const Row = ({ children, status, name, action, dragging, index }) => {
   const { initValues, setInitValues } = useContext(InitiativeContext);
   const { participants, active } = initValues;
@@ -130,13 +104,31 @@ const Row = ({ children, status, name, action, dragging, index }) => {
     });
   };
 
+  const checkFilled = (value) => {
+    let filled = false;
+    if (value === 'dying1') {
+      if (status === 'dying1' || status === 'dying2' || status === 'dying3') {
+        filled = true;
+      }
+    } else if (value === 'dying2') {
+      if (status === 'dying2' || status === 'dying3') {
+        filled = true;
+      }
+    } else if (value === 'dying3') {
+      if (status === 'dying3') {
+        filled = true;
+      }
+    }
+    return filled;
+  };
+
   const handleDying = (status) => {
     const updatedValues = participants.map((part) => {
       if (part.name === name) {
         if (part.status === status) {
           switch (part.status) {
             case 'dying1':
-              return { ...part, status: 'normal' };
+              return { ...part, status: 'alive' };
             case 'dying2':
               return { ...part, status: 'dying1' };
             case 'dying3':
@@ -195,7 +187,7 @@ const Row = ({ children, status, name, action, dragging, index }) => {
           <IconButton
             icon={'chevron_right'}
             onClick={handleDelay}
-            hidden
+            $subtle
             tabIndex={-1}
           />
         )}
@@ -205,60 +197,33 @@ const Row = ({ children, status, name, action, dragging, index }) => {
           <IconButton
             onClick={handleReady}
             icon={'keyboard_double_arrow_right'}
-            hidden
+            $subtle
             tabIndex={-1}
           />
         )}
       </Action>
       <Dying>
-        <SkullButton
+        <IconButton
+          icon="skull"
           onClick={() => handleDying('dying1')}
-          $status={status}
           tabIndex={-1}
-        >
-          <span
-            className="material-symbols-outlined"
-            style={{
-              fontVariationSettings:
-                status === 'dying1' ||
-                status === 'dying2' ||
-                status === 'dying3'
-                  ? "'FILL' 1"
-                  : null,
-            }}
-          >
-            skull
-          </span>
-        </SkullButton>
-        <SkullButton
+          filled={checkFilled('dying1')}
+          $subtle={status === 'alive'}
+        />
+        <IconButton
+          icon="skull"
           onClick={() => handleDying('dying2')}
-          $status={status}
           tabIndex={-1}
-        >
-          <span
-            className="material-symbols-outlined"
-            style={{
-              fontVariationSettings:
-                status === 'dying2' || status === 'dying3' ? "'FILL' 1" : null,
-            }}
-          >
-            skull
-          </span>
-        </SkullButton>
-        <SkullButton
+          filled={checkFilled('dying2')}
+          $subtle={status === 'alive'}
+        />
+        <IconButton
+          icon="skull"
           onClick={() => handleDying('dying3')}
-          $status={status}
           tabIndex={-1}
-        >
-          <span
-            className="material-symbols-outlined"
-            style={{
-              fontVariationSettings: status === 'dying3' ? "'FILL' 1" : null,
-            }}
-          >
-            skull
-          </span>
-        </SkullButton>
+          filled={checkFilled('dying3')}
+          $subtle={status === 'alive'}
+        />
       </Dying>
     </Flex>
   );

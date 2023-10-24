@@ -10,31 +10,30 @@ const StyledButton = styled.button`
         return css`
           background-color: ${(props) =>
             props.$active
-              ? darken(0.15, colors.theme.orange)
+              ? darken(0.15, colors.white)
               : transparentize(0.75, colors.black)};
-          color: ${(props) =>
-            props.$active ? colors.white : colors.theme.orange};
-          border: solid 1px ${darken(0.15, colors.theme.orange)};
+          color: ${(props) => (props.$active ? colors.white : colors.white)};
+          border: solid 1px ${darken(0.15, colors.white)};
           &:hover:not([disabled]) {
             cursor: pointer;
             background-color: ${(props) =>
               props.$active
-                ? darken(0.1, colors.theme.orange)
+                ? darken(0.1, colors.white)
                 : transparentize(0.5, colors.black)};
           }
 
           svg {
-            fill: ${colors.theme.orange};
+            fill: ${colors.white};
           }
         `;
       default:
         return css`
-          background-color: ${darken(0.15, colors.theme.orange)};
-          border: solid 1px ${darken(0.15, colors.theme.orange)};
+          background-color: ${darken(0.15, colors.white)};
+          border: solid 1px ${darken(0.15, colors.white)};
           color: ${colors.white};
           &:hover:not([disabled]) {
             cursor: pointer;
-            background-color: ${darken(0.25, colors.theme.orange)};
+            background-color: ${darken(0.25, colors.white)};
           }
 
           svg {
@@ -90,7 +89,7 @@ const StyledButton = styled.button`
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px ${transparentize(0.5, colors.theme.orange)};
+    box-shadow: 0 0 0 3px ${transparentize(0.5, colors.white)};
   }
 `;
 

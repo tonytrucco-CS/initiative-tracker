@@ -5,13 +5,15 @@ export const globalCSS = css`
   body,
   html {
     margin: 0;
-    height: 100vh;
+    height: 100dvh;
     font-size: 1rem;
     background-color: ${colors.theme.gray};
   }
 
   #root {
-    height: 100vh;
+    height: 100dvh;
+    display: grid;
+    grid-template-rows: 60px 1fr;
   }
 
   *,

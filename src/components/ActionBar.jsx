@@ -99,21 +99,21 @@ const ActionBar = () => {
     <Nav>
       <Left>
         <Button size="xs" outline unrounded onClick={addPC}>
-          Add Player&nbsp;
+          Player&nbsp;
           <span className="material-symbols-outlined">person</span>
         </Button>
         <Button size="xs" outline unrounded onClick={addNPC}>
-          Add NPC&nbsp;
+          NPC&nbsp;
           <span className="material-symbols-outlined">group</span>
         </Button>
         <Button size="xs" outline unrounded onClick={addMonster}>
-          Add Monster&nbsp;
+          Monster&nbsp;
           <span className="material-symbols-outlined">
             sentiment_extremely_dissatisfied
           </span>
         </Button>
         <Button size="xs" outline unrounded onClick={addHazard}>
-          Add Hazard&nbsp;
+          Hazard&nbsp;
           <span className="material-symbols-outlined">
             local_fire_department
           </span>

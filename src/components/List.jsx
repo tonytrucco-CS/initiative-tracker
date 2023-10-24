@@ -8,8 +8,7 @@ const Flex = styled.div`
   display: flex;
   gap: 0.25rem;
   flex-direction: column;
-  touch-action: none;
-  -ms-touch-action: none;
+  max-height: 63dvh;
 `;
 
 const List = () => {
