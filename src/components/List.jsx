@@ -27,6 +27,9 @@ const List = () => {
 
     // set the container ref and grab the dragged item based on that
     const container = containerRef.current;
+    // prevent actions on container while dragging
+    container.style.touchAction = 'none';
+    setNoActions(true);
     const items = [...container.childNodes];
     const dragItem = items[index];
     const itemsBelowDragItem = items.slice(index + 1);
@@ -41,10 +44,6 @@ const List = () => {
     document.onpointermove = dragMove;
 
     function dragMove(e) {
-      // prevent actions on container while dragging
-      container.style.touchAction = 'none';
-      setNoActions(true);
-
       // calculate move distance
       const posY = e.clientY - y;
 
