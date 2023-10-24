@@ -98,21 +98,45 @@ const ActionBar = () => {
   return (
     <Nav>
       <Left>
-        <Button size="xs" outline unrounded onClick={addPC}>
+        <Button
+          size="xs"
+          outline
+          unrounded
+          disabled={participants.length > 10}
+          onClick={addPC}
+        >
           Player&nbsp;
           <span className="material-symbols-outlined">person</span>
         </Button>
-        <Button size="xs" outline unrounded onClick={addMonster}>
+        <Button
+          size="xs"
+          outline
+          unrounded
+          disabled={participants.length > 10}
+          onClick={addMonster}
+        >
           Monster&nbsp;
           <span className="material-symbols-outlined">
             sentiment_extremely_dissatisfied
           </span>
         </Button>
-        <Button size="xs" outline unrounded onClick={addNPC}>
+        <Button
+          size="xs"
+          outline
+          unrounded
+          disabled={participants.length > 10}
+          onClick={addNPC}
+        >
           NPC&nbsp;
           <span className="material-symbols-outlined">group</span>
         </Button>
-        <Button size="xs" outline unrounded onClick={addHazard}>
+        <Button
+          size="xs"
+          outline
+          unrounded
+          disabled={participants.length > 10}
+          onClick={addHazard}
+        >
           Hazard&nbsp;
           <span className="material-symbols-outlined">
             local_fire_department
