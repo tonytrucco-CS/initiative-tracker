@@ -6,6 +6,7 @@ import { transparentize } from 'polished';
 import DragButton from './DragButton';
 import { useContext } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
+import _ from 'lodash';
 
 const Div = styled.div`
   display: flex;
@@ -184,6 +185,18 @@ const Participant = ({
     });
   };
 
+  const handleReSort = () => {
+    setInitValues((prevInit) => {
+      const updatedParticipants = [...prevInit.participants];
+      const sortedParticipants = _.orderBy(
+        updatedParticipants,
+        'initiative',
+        'desc',
+      );
+      return { ...prevInit, participants: sortedParticipants };
+    });
+  };
+
   const handleSelect = (e) => {
     e.target.select();
   };
@@ -215,6 +228,7 @@ const Participant = ({
         name="Initiative"
         onChange={(e) => handleInit(e)}
         onClick={handleSelect}
+        onBlur={handleReSort}
       />
     </Div>
   );
