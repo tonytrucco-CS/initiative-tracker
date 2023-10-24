@@ -8,7 +8,7 @@ const Flex = styled.div`
   display: flex;
   gap: 0.25rem;
   flex-direction: column;
-  max-height: 63dvh;
+  max-height: 62dvh;
 `;
 
 const List = () => {
@@ -39,6 +39,9 @@ const List = () => {
     document.onpointermove = dragMove;
 
     function dragMove(e) {
+      // prevent actions on container while dragging
+      container.style.touchAction = 'none';
+
       // calculate move distance
       const posY = e.clientY - y;
 
@@ -111,6 +114,7 @@ const List = () => {
 
       setDragging(undefined);
       dragItem.style = '';
+      container.style = '';
 
       container.removeChild(div);
 
