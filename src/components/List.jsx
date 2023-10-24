@@ -3,6 +3,7 @@ import Participant from './Participant';
 import Row from './Row';
 import { useContext, useRef, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
+import DragContext from '../context/DragContext';
 
 const Flex = styled.div`
   display: flex;
@@ -13,6 +14,7 @@ const Flex = styled.div`
 
 const List = () => {
   const { initValues, setInitValues } = useContext(InitiativeContext);
+  const { setNoActions } = useContext(DragContext);
   const { participants } = initValues;
   const [isDragging, setDragging] = useState();
 
@@ -41,6 +43,7 @@ const List = () => {
     function dragMove(e) {
       // prevent actions on container while dragging
       container.style.touchAction = 'none';
+      setNoActions(true);
 
       // calculate move distance
       const posY = e.clientY - y;
@@ -115,6 +118,7 @@ const List = () => {
       setDragging(undefined);
       dragItem.style = '';
       container.style = '';
+      setNoActions(false);
 
       container.removeChild(div);
 
