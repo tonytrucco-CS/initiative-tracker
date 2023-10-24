@@ -8,10 +8,10 @@ const StyledHeader = styled.header`
   margin: 0;
   padding: 0.5rem 1rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   grid-gap: 1rem;
 
-  @media only screen and (max-width: ${breakpoints.sm}) {
+  @media only screen and (max-width: ${breakpoints.md}) {
     grid-template-columns: 1fr;
   }
 `;

@@ -32,7 +32,15 @@ const Button = styled.button`
   }
 `;
 
-const IconButton = ({ onClick, icon, hidden, $subtle, disabled, ...props }) => {
+const IconButton = ({
+  onClick,
+  icon,
+  hidden,
+  $subtle,
+  disabled,
+  filled,
+  ...props
+}) => {
   return (
     <Button
       onClick={onClick}
@@ -41,7 +49,14 @@ const IconButton = ({ onClick, icon, hidden, $subtle, disabled, ...props }) => {
       $subtle={$subtle}
       disabled={disabled}
     >
-      <span className="material-symbols-outlined">{icon}</span>
+      <span
+        className="material-symbols-outlined"
+        style={{
+          fontVariationSettings: filled ? "'FILL' 1" : null,
+        }}
+      >
+        {icon}
+      </span>
     </Button>
   );
 };
@@ -54,4 +69,5 @@ IconButton.propTypes = {
   hidden: PropTypes.bool,
   $subtle: PropTypes.bool,
   disabled: PropTypes.bool,
+  filled: PropTypes.bool,
 };

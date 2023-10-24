@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { breakpoints, colors } from '../utils/variables';
+import { colors } from '../utils/variables';
 import InitiativeHeader from './InitiativeHeader';
 import ActionBar from './ActionBar';
 import { useContext } from 'react';
@@ -12,12 +12,7 @@ const Div = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  height: calc(100vh - 4.75em);
   justify-content: space-between;
-
-  @media only screen and (max-width: ${breakpoints.md}) {
-    height: 71.5vh;
-  }
 `;
 
 const Assigned = styled.div`

@@ -15,7 +15,7 @@ const H2 = styled.h2`
 `;
 
 const TextArea = styled.textarea`
-  height: calc(100vh - 3.7em);
+  height: calc(100dvh - 3.7em);
   line-height: 1.5;
   font-size: 2rem;
   font-family: ${fonts.body};
@@ -24,6 +24,8 @@ const TextArea = styled.textarea`
   background-color: ${transparentize(0.75, colors.white)};
   color: ${colors.pure_white};
   transition: box-shadow 0.3s;
+  width: 100%;
+  height: 100%;
 
   &:focus {
     outline: none;
@@ -31,7 +33,6 @@ const TextArea = styled.textarea`
   }
 
   @media only screen and (max-width: ${breakpoints.md}) {
-    height: 15.5vh;
     font-size: 1.5rem;
   }
 `;
