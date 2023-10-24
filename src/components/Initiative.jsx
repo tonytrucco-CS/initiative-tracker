@@ -22,7 +22,7 @@ const Assigned = styled.div`
   gap: 0.5rem;
   overflow-y: auto;
   flex: 1;
-  touch-action: ${(props) => (props.$isDragging ? 'none' : null)};
+  touch-action: none;
 `;
 
 const Initiative = ({ children }) => {
