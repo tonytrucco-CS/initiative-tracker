@@ -13,6 +13,8 @@ const Flex = styled.div`
     if (props.$dragging === props.$index) {
       return css`
         background-color: ${colors.theme.gray};
+        touch-action: none;
+        -ms-touch-action: none;
       `;
     }
   }}

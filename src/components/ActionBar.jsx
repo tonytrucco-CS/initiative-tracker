@@ -102,15 +102,15 @@ const ActionBar = () => {
           Player&nbsp;
           <span className="material-symbols-outlined">person</span>
         </Button>
-        <Button size="xs" outline unrounded onClick={addNPC}>
-          NPC&nbsp;
-          <span className="material-symbols-outlined">group</span>
-        </Button>
         <Button size="xs" outline unrounded onClick={addMonster}>
           Monster&nbsp;
           <span className="material-symbols-outlined">
             sentiment_extremely_dissatisfied
           </span>
+        </Button>
+        <Button size="xs" outline unrounded onClick={addNPC}>
+          NPC&nbsp;
+          <span className="material-symbols-outlined">group</span>
         </Button>
         <Button size="xs" outline unrounded onClick={addHazard}>
           Hazard&nbsp;
