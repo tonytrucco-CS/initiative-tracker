@@ -87,11 +87,16 @@ const ActionBar = () => {
     });
   };
 
+  // end an encounter
   const handleEnd = () => {
+    // keep the PCs
+    const onlyPCs = initValues.participants
+      .filter((participant) => participant.type === 'pc')
+      .map((participant) => ({ ...participant, initiative: 0 }));
     setInitValues({
       round: undefined,
       active: undefined,
-      participants: [],
+      participants: onlyPCs,
     });
   };
 

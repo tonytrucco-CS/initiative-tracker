@@ -67,8 +67,9 @@ const Dying = styled.div`
 const Row = React.forwardRef(
   ({ children, status, name, action, dragging, index }, ref) => {
     const { initValues, setInitValues } = useContext(InitiativeContext);
-    const { participants, active } = initValues;
+    const { participants, active, round } = initValues;
 
+    // reset the action status to normal
     const handleClear = () => {
       const updatedValues = participants.map((part) => {
         if (part.name === name) {
@@ -82,6 +83,7 @@ const Row = React.forwardRef(
       });
     };
 
+    // the participant delays their action
     const handleDelay = () => {
       const updatedValues = participants.map((part) => {
         if (part.name === name) {
@@ -95,6 +97,7 @@ const Row = React.forwardRef(
       });
     };
 
+    // the participant readies an action
     const handleReady = () => {
       const updatedValues = participants.map((part) => {
         if (part.name === name) {
@@ -108,6 +111,7 @@ const Row = React.forwardRef(
       });
     };
 
+    // check if the skulls should be marked as filled or not when dying
     const checkFilled = (value) => {
       let filled = false;
       if (value === 'dying1') {
@@ -126,6 +130,7 @@ const Row = React.forwardRef(
       return filled;
     };
 
+    // handle clicking of skulls for managing dying status
     const handleDying = (status) => {
       const updatedValues = participants.map((part) => {
         if (part.name === name) {
@@ -150,6 +155,7 @@ const Row = React.forwardRef(
       });
     };
 
+    // remove a participant
     const handleRemove = () => {
       const toRemove = index;
       setInitValues((prevInit) => ({
@@ -166,7 +172,7 @@ const Row = React.forwardRef(
             icon="delete"
             onClick={handleRemove}
             $subtle
-            tabIndex={-1}
+            tabIndex={round === undefined ? -1 : null}
           />
           <Active>
             {active === index && (
@@ -180,7 +186,7 @@ const Row = React.forwardRef(
               onClick={handleClear}
               icon={'arrow_left_alt'}
               style={{ position: 'absolute' }}
-              tabIndex={-1}
+              tabIndex={round === undefined ? -1 : null}
             />
           )}
           {children}
@@ -191,7 +197,7 @@ const Row = React.forwardRef(
               icon={'chevron_right'}
               onClick={handleDelay}
               $subtle
-              tabIndex={-1}
+              tabIndex={round === undefined ? -1 : null}
             />
           )}
         </Action>
@@ -201,7 +207,7 @@ const Row = React.forwardRef(
               onClick={handleReady}
               icon={'keyboard_double_arrow_right'}
               $subtle
-              tabIndex={-1}
+              tabIndex={round === undefined ? -1 : null}
             />
           )}
         </Action>
@@ -209,21 +215,21 @@ const Row = React.forwardRef(
           <IconButton
             icon="skull"
             onClick={() => handleDying('dying1')}
-            tabIndex={-1}
+            tabIndex={round === undefined ? -1 : null}
             filled={checkFilled('dying1')}
             $subtle={status === 'alive'}
           />
           <IconButton
             icon="skull"
             onClick={() => handleDying('dying2')}
-            tabIndex={-1}
+            tabIndex={round === undefined ? -1 : null}
             filled={checkFilled('dying2')}
             $subtle={status === 'alive'}
           />
           <IconButton
             icon="skull"
             onClick={() => handleDying('dying3')}
-            tabIndex={-1}
+            tabIndex={round === undefined ? -1 : null}
             filled={checkFilled('dying3')}
             $subtle={status === 'alive'}
           />
