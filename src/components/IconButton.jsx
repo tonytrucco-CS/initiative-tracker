@@ -18,7 +18,13 @@ const Button = styled.button`
   opacity: ${(props) => (props.$hidden ? 0 : null)};
   transition:
     opacity 0.3s,
-    color 0.3s;
+    color 0.3s,
+    box-shadow 0.3s;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px ${transparentize(0.75, colors.white)};
+  }
 
   &:hover {
     opacity: ${(props) => (props.$hidden ? 1 : null)};
