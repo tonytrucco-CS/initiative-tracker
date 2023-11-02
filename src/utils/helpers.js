@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 export function addTouchClass() {
   var isTouch = false; // var to indicate current input type (is touch versus no touch)
   var isTouchTimer;
@@ -29,4 +31,22 @@ export function addTouchClass() {
 
   document.addEventListener('touchstart', addtouchclass, false); // this event only gets called when the input type is touch
   document.addEventListener('mouseover', removetouchclass, false); // this event gets called when the input type is everything from touch to mouse/trackpad
+}
+
+export function useIsVisible(ref) {
+  const [isIntersecting, setIntersecting] = useState(false);
+  console.log('intersect', isIntersecting);
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) =>
+      setIntersecting(entry.isIntersecting),
+    );
+
+    observer.observe(ref.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, [ref]);
+  console.log('intersect', isIntersecting);
+
+  return isIntersecting;
 }

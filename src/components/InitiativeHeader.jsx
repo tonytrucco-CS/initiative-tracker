@@ -3,7 +3,7 @@ import { colors } from '../utils/variables';
 
 const Div = styled.div`
   display: grid;
-  grid-template-columns: 5em 1fr 5em 5em 8em;
+  grid-template-columns: 4em 1fr 4em 4em 7em 2.6em;
   border-bottom: solid 1px ${colors.theme.light_gray};
 `;
 
