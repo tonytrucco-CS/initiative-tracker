@@ -22,7 +22,6 @@ const Assigned = styled.div`
   gap: 0.5rem;
   overflow-y: auto;
   flex: 1;
-  touch-action: none;
 `;
 
 const Initiative = ({ children }) => {

@@ -107,8 +107,8 @@ const ActionBar = () => {
           size="xs"
           outline
           unrounded
-          disabled={participants.length > 10}
           onClick={addPC}
+          color={colors.theme.blue}
         >
           Player&nbsp;
           <span className="material-symbols-outlined">person</span>
@@ -117,8 +117,8 @@ const ActionBar = () => {
           size="xs"
           outline
           unrounded
-          disabled={participants.length > 10}
           onClick={addMonster}
+          color={colors.theme.red}
         >
           Monster&nbsp;
           <span className="material-symbols-outlined">
@@ -129,8 +129,8 @@ const ActionBar = () => {
           size="xs"
           outline
           unrounded
-          disabled={participants.length > 10}
           onClick={addNPC}
+          color={colors.theme.green}
         >
           NPC&nbsp;
           <span className="material-symbols-outlined">group</span>
@@ -139,8 +139,8 @@ const ActionBar = () => {
           size="xs"
           outline
           unrounded
-          disabled={participants.length > 10}
           onClick={addHazard}
+          color={colors.theme.orange}
         >
           Hazard&nbsp;
           <span className="material-symbols-outlined">

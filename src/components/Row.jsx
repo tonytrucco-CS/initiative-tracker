@@ -14,8 +14,6 @@ const Flex = styled.div`
     if (props.$dragging === props.$index) {
       return css`
         background-color: ${colors.theme.gray};
-        touch-action: none;
-        -ms-touch-action: none;
       `;
     }
   }}
@@ -65,7 +63,7 @@ const Dying = styled.div`
 `;
 
 const Row = React.forwardRef(
-  ({ children, status, name, action, dragging, index }, ref) => {
+  ({ children, status, name, action, dragging, index, type }, ref) => {
     const { initValues, setInitValues } = useContext(InitiativeContext);
     const { participants, active, round } = initValues;
 
@@ -212,27 +210,31 @@ const Row = React.forwardRef(
           )}
         </Action>
         <Dying>
-          <IconButton
-            icon="skull"
-            onClick={() => handleDying('dying1')}
-            tabIndex={round === undefined ? -1 : null}
-            filled={checkFilled('dying1')}
-            $subtle={status === 'alive'}
-          />
-          <IconButton
-            icon="skull"
-            onClick={() => handleDying('dying2')}
-            tabIndex={round === undefined ? -1 : null}
-            filled={checkFilled('dying2')}
-            $subtle={status === 'alive'}
-          />
-          <IconButton
-            icon="skull"
-            onClick={() => handleDying('dying3')}
-            tabIndex={round === undefined ? -1 : null}
-            filled={checkFilled('dying3')}
-            $subtle={status === 'alive'}
-          />
+          {type !== 'hazard' && (
+            <>
+              <IconButton
+                icon="skull"
+                onClick={() => handleDying('dying1')}
+                tabIndex={round === undefined ? -1 : null}
+                filled={checkFilled('dying1')}
+                $subtle={status === 'alive'}
+              />
+              <IconButton
+                icon="skull"
+                onClick={() => handleDying('dying2')}
+                tabIndex={round === undefined ? -1 : null}
+                filled={checkFilled('dying2')}
+                $subtle={status === 'alive'}
+              />
+              <IconButton
+                icon="skull"
+                onClick={() => handleDying('dying3')}
+                tabIndex={round === undefined ? -1 : null}
+                filled={checkFilled('dying3')}
+                $subtle={status === 'alive'}
+              />
+            </>
+          )}
         </Dying>
       </Flex>
     );
@@ -248,4 +250,5 @@ Row.propTypes = {
   action: PropTypes.string.isRequired,
   dragging: PropTypes.number,
   index: PropTypes.number.isRequired,
+  type: PropTypes.string.isRequired,
 };

@@ -12,6 +12,7 @@ const Span = styled.span`
   padding: 0.5rem;
   color: ${colors.white};
   align-items: center;
+  justify-content: space-between;
 
   &:not(:last-of-type) {
     border-right: solid 1px ${colors.theme.light_gray};
@@ -22,7 +23,10 @@ const InitiativeHeader = () => {
   return (
     <Div>
       <Span></Span>
-      <Span>Initiative</Span>
+      <Span>
+        Initiative
+        <span className="material-symbols-outlined">timer</span>
+      </Span>
       <Span>Delay</Span>
       <Span>Ready</Span>
       <Span>Dying</Span>

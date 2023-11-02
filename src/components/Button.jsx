@@ -11,15 +11,18 @@ const StyledButton = styled.button`
           background-color: ${(props) =>
             props.$active
               ? darken(0.15, colors.white)
-              : transparentize(0.75, colors.black)};
-          color: ${(props) => (props.$active ? colors.white : colors.white)};
-          border: solid 1px ${darken(0.15, colors.white)};
+              : transparentize(0.5, colors.black)};
+          color: ${(props) => (props.color ? props.color : colors.white)};
+          border: ${(props) =>
+            props.color
+              ? `solid 1px ${props.color}`
+              : `solid 1px ${colors.white}`};
           &:hover:not([disabled]) {
             cursor: pointer;
             background-color: ${(props) =>
               props.$active
                 ? darken(0.1, colors.white)
-                : transparentize(0.5, colors.black)};
+                : transparentize(0.25, colors.black)};
           }
 
           svg {
@@ -89,7 +92,10 @@ const StyledButton = styled.button`
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px ${transparentize(0.5, colors.white)};
+    box-shadow: ${(props) =>
+      props.color
+        ? `0 0 0 3px ${transparentize(0.5, props.color)}`
+        : `0 0 0 3px ${transparentize(0.5, colors.white)}`};
   }
 `;
 
@@ -103,6 +109,7 @@ const Button = ({
   size,
   square = false,
   unrounded = false,
+  color = null,
   ...props
 }) => {
   return (
@@ -115,6 +122,7 @@ const Button = ({
       size={size}
       $square={square}
       $unrounded={unrounded}
+      color={color}
       {...props}
     >
       {children}
@@ -132,6 +140,7 @@ Button.propTypes = {
   disabled: PropTypes.bool,
   autoFocus: PropTypes.bool,
   size: PropTypes.string,
+  color: PropTypes.string,
 };
 
 export default Button;
