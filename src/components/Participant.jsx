@@ -4,7 +4,7 @@ import { colors, fonts } from '../utils/variables';
 import TypeIcon from './TypeIcon';
 import { transparentize } from 'polished';
 import DragButton from './DragButton';
-import { useContext } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import _ from 'lodash';
 import DragContext from '../context/DragContext';
@@ -22,11 +22,11 @@ const Div = styled.div`
         return css``;
       case 'delay':
         return css`
-          transform: translateX(2.5em);
+          transform: translateX(2em);
         `;
       case 'ready':
         return css`
-          transform: translateX(7.5em);
+          transform: translateX(6em);
         `;
       default:
         return css``;
@@ -162,9 +162,14 @@ const Participant = ({
   action = 'normal',
   index,
   startDrag,
+  topRef,
+  botRef,
 }) => {
-  const { setInitValues } = useContext(InitiativeContext);
+  const { initValues, setInitValues } = useContext(InitiativeContext);
+  const { participants } = initValues;
   const { isDragging } = useContext(DragContext);
+
+  const partRef = useRef();
 
   const handleName = (e) => {
     setInitValues((prevInit) => {
@@ -203,9 +208,25 @@ const Participant = ({
   const handleSelect = (e) => {
     e.target.select();
   };
+
+  // when adding a participant, make sure the view is scrolled to it
+  useEffect(() => {
+    partRef.current.scrollIntoView({
+      behavior: 'smooth',
+    });
+  }, []);
+
   return (
-    <Div type={type} action={action} $dragging={isDragging}>
-      <Actions>
+    <Div type={type} action={action} $dragging={isDragging} ref={partRef}>
+      <Actions
+        ref={
+          index === 0
+            ? topRef
+            : index === participants.length - 1
+            ? botRef
+            : null
+        }
+      >
         <DragButton
           icon="drag_indicator"
           onPointerDown={startDrag}
@@ -246,4 +267,10 @@ Participant.propTypes = {
   action: PropTypes.oneOf(['normal', 'ready', 'delay']).isRequired,
   index: PropTypes.number.isRequired,
   startDrag: PropTypes.func.isRequired,
+  topRef: PropTypes.shape({
+    current: PropTypes.instanceOf(HTMLDivElement),
+  }),
+  botRef: PropTypes.shape({
+    current: PropTypes.instanceOf(HTMLDivElement),
+  }),
 };

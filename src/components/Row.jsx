@@ -2,14 +2,14 @@
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 import { colors } from '../utils/variables';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import { keyframes } from 'styled-components';
 import IconButton from './IconButton';
 
 const Flex = styled.div`
   display: grid;
-  grid-template-columns: 5em 1fr 5em 5em 8em;
+  grid-template-columns: 4em 1fr 4em 4em 7em;
   ${(props) => {
     if (props.$dragging === props.$index) {
       return css`
@@ -66,6 +66,8 @@ const Row = React.forwardRef(
   ({ children, status, name, action, dragging, index, type }, ref) => {
     const { initValues, setInitValues } = useContext(InitiativeContext);
     const { participants, active, round } = initValues;
+
+    const viewRef = useRef();
 
     // reset the action status to normal
     const handleClear = () => {
@@ -163,6 +165,16 @@ const Row = React.forwardRef(
         ),
       }));
     };
+
+    // can we scroll the active player into view?
+    useEffect(() => {
+      if (active === index) {
+        viewRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
+    }, [active, index]);
     return (
       <Flex $dragging={dragging} $index={index} ref={ref}>
         <RemoveActive>
@@ -172,7 +184,7 @@ const Row = React.forwardRef(
             $subtle
             tabIndex={round === undefined ? -1 : null}
           />
-          <Active>
+          <Active ref={active === index ? viewRef : null}>
             {active === index && (
               <span className="material-symbols-outlined">arrow_right</span>
             )}

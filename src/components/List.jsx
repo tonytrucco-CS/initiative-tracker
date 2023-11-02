@@ -4,12 +4,40 @@ import Row from './Row';
 import { useContext, useRef, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import DragContext from '../context/DragContext';
+import IconButton from './IconButton';
+import { breakpoints, colors } from '../utils/variables';
+
+const FlexColumns = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 const Flex = styled.div`
   display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
+const ScrollButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-left: solid 1px ${colors.theme.light_gray};
+  padding: 0.5rem 0 0.5rem 0.5rem;
+`;
+
+const ListContainer = styled.div`
+  display: flex;
   gap: 0.25rem;
   flex-direction: column;
-  max-height: 62dvh;
+  overflow-y: hidden;
+  touch-action: none;
+  padding: 0.5rem 0;
+  max-height: 79dvh;
+
+  @media only screen and (max-width: ${breakpoints.md}) {
+    max-height: 61dvh;
+  }
 `;
 
 const List = () => {
@@ -19,6 +47,8 @@ const List = () => {
   const [isDragging, setDragging] = useState();
 
   const containerRef = useRef();
+  const topRef = useRef();
+  const botRef = useRef();
 
   function startDrag(e, index) {
     if (!detectLeftButton(e)) return;
@@ -139,32 +169,54 @@ const List = () => {
     return button === 1;
   };
 
+  const handleScrollUp = () => {
+    topRef.current.scrollIntoView({
+      behavior: 'smooth',
+    });
+  };
+
+  const handleScrollDown = () => {
+    botRef.current.scrollIntoView({
+      behavior: 'smooth',
+    });
+  };
+
   return (
-    <Flex ref={containerRef}>
-      {participants.map((part, index) => {
-        const { name, type, initiative, action, status } = part;
-        return (
-          <Row
-            key={index}
-            status={status}
-            name={name}
-            action={action}
-            dragging={isDragging}
-            type={type}
-            index={index}
-          >
-            <Participant
-              name={name}
-              type={type}
-              initiative={initiative}
-              action={action}
-              index={index}
-              startDrag={startDrag}
-            />
-          </Row>
-        );
-      })}
-    </Flex>
+    <FlexColumns>
+      <Flex>
+        <ListContainer ref={containerRef}>
+          {participants.map((part, index) => {
+            const { name, type, initiative, action, status } = part;
+            return (
+              <Row
+                key={index}
+                status={status}
+                name={name}
+                action={action}
+                dragging={isDragging}
+                type={type}
+                index={index}
+              >
+                <Participant
+                  name={name}
+                  type={type}
+                  initiative={initiative}
+                  action={action}
+                  index={index}
+                  startDrag={startDrag}
+                  topRef={topRef}
+                  botRef={botRef}
+                />
+              </Row>
+            );
+          })}
+        </ListContainer>
+      </Flex>
+      <ScrollButtons>
+        <IconButton icon={'keyboard_arrow_up'} onClick={handleScrollUp} />
+        <IconButton icon={'keyboard_arrow_down'} onClick={handleScrollDown} />
+      </ScrollButtons>
+    </FlexColumns>
   );
 };
 

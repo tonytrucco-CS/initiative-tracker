@@ -17,10 +17,9 @@ const Div = styled.div`
 `;
 
 const Assigned = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  overflow-y: auto;
+  display: grid;
+  grid-template-rows: ${(props) =>
+    props.$hasParticipants ? '2.5em 1fr' : '1fr'};
   flex: 1;
 `;
 
@@ -30,7 +29,10 @@ const Initiative = ({ children }) => {
   return (
     <Div>
       <DragContext.Provider value={{ isDragging, setNoActions }}>
-        <Assigned $isDragging={isDragging}>
+        <Assigned
+          $isDragging={isDragging}
+          $hasParticipants={initValues.participants.length > 0}
+        >
           {initValues.participants.length > 0 && <InitiativeHeader />}
           {children}
         </Assigned>

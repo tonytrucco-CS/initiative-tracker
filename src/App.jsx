@@ -37,6 +37,7 @@ function App() {
   useEffect(() => {
     addTouchClass();
   }, []);
+
   return (
     <InitiativeContext.Provider value={{ initValues, setInitValues }}>
       <Header />
