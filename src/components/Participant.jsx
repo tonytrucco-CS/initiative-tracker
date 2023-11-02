@@ -7,6 +7,7 @@ import DragButton from './DragButton';
 import { useContext } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import _ from 'lodash';
+import DragContext from '../context/DragContext';
 
 const Div = styled.div`
   display: flex;
@@ -35,6 +36,7 @@ const Div = styled.div`
   align-items: center;
   justify-content: space-between;
   box-shadow: 4px 4px 0.5rem ${transparentize(0.5, colors.black)};
+  touch-action: ${(props) => (props.$dragging ? 'none' : null)};
   ${(props) => {
     switch (props.type) {
       case 'pc':
@@ -162,6 +164,7 @@ const Participant = ({
   startDrag,
 }) => {
   const { setInitValues } = useContext(InitiativeContext);
+  const { isDragging } = useContext(DragContext);
 
   const handleName = (e) => {
     setInitValues((prevInit) => {
@@ -201,7 +204,7 @@ const Participant = ({
     e.target.select();
   };
   return (
-    <Div type={type} action={action}>
+    <Div type={type} action={action} $dragging={isDragging}>
       <Actions>
         <DragButton
           icon="drag_indicator"

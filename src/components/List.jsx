@@ -28,7 +28,7 @@ const List = () => {
     // set the container ref and grab the dragged item based on that
     const container = containerRef.current;
     // prevent actions on container while dragging
-    container.style.touchAction = 'none';
+    // container.style.touchAction = 'none';
     setNoActions(true);
     const items = [...container.childNodes];
     const dragItem = items[index];
@@ -150,6 +150,7 @@ const List = () => {
             name={name}
             action={action}
             dragging={isDragging}
+            type={type}
             index={index}
           >
             <Participant
