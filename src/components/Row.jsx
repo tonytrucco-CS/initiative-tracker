@@ -158,12 +158,34 @@ const Row = React.forwardRef(
     // remove a participant
     const handleRemove = () => {
       const toRemove = index;
-      setInitValues((prevInit) => ({
-        ...prevInit,
-        participants: prevInit.participants.filter(
-          (_, index) => index !== toRemove,
-        ),
-      }));
+      if (participants.length === 1) {
+        // basically we reset the app if all participants are removed
+        setInitValues({
+          round: undefined,
+          active: undefined,
+          participants: [],
+        });
+        return;
+      }
+      // if it's the last participant in the array being removed
+      if (participants.length - 1 === index) {
+        setInitValues((prevInit) => ({
+          ...prevInit,
+          active:
+            index === prevInit.participants.length - 1 ? 0 : prevInit.active,
+          round: prevInit.round + 1,
+          participants: prevInit.participants.filter(
+            (_, index) => index !== toRemove,
+          ),
+        }));
+      } else {
+        setInitValues((prevInit) => ({
+          ...prevInit,
+          participants: prevInit.participants.filter(
+            (_, index) => index !== toRemove,
+          ),
+        }));
+      }
     };
 
     // can we scroll the active player into view?

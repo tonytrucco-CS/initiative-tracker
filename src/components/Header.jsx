@@ -18,7 +18,8 @@ const StyledHeader = styled.header`
 
 const Flex = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: ${(props) =>
+    props.$active !== undefined ? 'space-between' : 'center'};
   align-items: center;
   gap: 0.5rem;
 `;
@@ -82,6 +83,7 @@ const Header = () => {
     setActive(participants.filter((_, index) => index === active)[0]);
   }, [active, participants]);
 
+  // move to the previous round
   const handlePrev = () => {
     setInitValues((prevInit) => ({
       ...prevInit,
@@ -89,6 +91,7 @@ const Header = () => {
     }));
   };
 
+  // move to the next round
   const handleNext = () => {
     setInitValues((prevInit) => ({
       ...prevInit,
@@ -96,6 +99,7 @@ const Header = () => {
     }));
   };
 
+  // move to the next participant and possibly next round
   const nextTurn = () => {
     if (active !== participants.length - 1) {
       setInitValues((prevInit) => ({
@@ -111,6 +115,7 @@ const Header = () => {
     }
   };
 
+  // move to previous participant
   const prevTurn = () => {
     if (active === 0) {
       setInitValues((prevInit) => ({
@@ -127,20 +132,7 @@ const Header = () => {
 
   return (
     <StyledHeader>
-      <Flex>
-        {active === undefined ? (
-          <H1>Initiative Tracker</H1>
-        ) : (
-          <Flex>
-            <IconButton icon="arrow_left" onClick={prevTurn} />
-            {activeParticipant ? (
-              <H1 type={activeParticipant.type}>{activeParticipant.name}</H1>
-            ) : (
-              <H1>Selecting...</H1>
-            )}
-            <IconButton icon="arrow_right" onClick={nextTurn} />
-          </Flex>
-        )}
+      <Flex $active={active}>
         {round !== undefined && (
           <Flex>
             <IconButton
@@ -152,6 +144,19 @@ const Header = () => {
               Round <span>{round}</span>
             </H2>
             <IconButton icon="arrow_right" onClick={handleNext} />
+          </Flex>
+        )}
+        {active === undefined ? (
+          <H1>Initiative Tracker</H1>
+        ) : (
+          <Flex>
+            <IconButton icon="arrow_left" onClick={prevTurn} />
+            {activeParticipant ? (
+              <H1 type={activeParticipant.type}>{activeParticipant.name}</H1>
+            ) : (
+              <H1>Selecting...</H1>
+            )}
+            <IconButton icon="arrow_right" onClick={nextTurn} />
           </Flex>
         )}
       </Flex>
