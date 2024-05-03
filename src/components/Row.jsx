@@ -171,9 +171,11 @@ const Row = React.forwardRef(
       if (participants.length - 1 === index) {
         setInitValues((prevInit) => ({
           ...prevInit,
-          active:
-            index === prevInit.participants.length - 1 ? 0 : prevInit.active,
-          round: prevInit.round + 1,
+          active: index === active ? 0 : prevInit.active,
+          round:
+            index === active && round !== undefined
+              ? prevInit.round + 1
+              : prevInit.round,
           participants: prevInit.participants.filter(
             (_, index) => index !== toRemove,
           ),

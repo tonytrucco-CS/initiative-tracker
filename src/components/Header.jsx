@@ -1,25 +1,32 @@
 import styled, { css } from 'styled-components';
-import { breakpoints, colors, fonts } from '../utils/variables';
+import { colors, fonts } from '../utils/variables';
 import { useContext, useEffect, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import IconButton from './IconButton';
+import PropTypes from 'prop-types';
 
 const StyledHeader = styled.header`
   margin: 0;
   padding: 0.5rem 1rem;
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-gap: 1rem;
-
-  @media only screen and (max-width: ${breakpoints.md}) {
-    grid-template-columns: 1fr;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4rem;
+  width: 100%;
 `;
+
+const ActionContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  flex: 1;
+`;
+
+const NoteAction = styled.div``;
 
 const Flex = styled.div`
   display: flex;
-  justify-content: ${(props) =>
-    props.$active !== undefined ? 'space-between' : 'center'};
   align-items: center;
   gap: 0.5rem;
 `;
@@ -72,7 +79,7 @@ const H2 = styled.h2`
   }
 `;
 
-const Header = () => {
+const Header = ({ toggleDrawer }) => {
   const { initValues, setInitValues } = useContext(InitiativeContext);
   const { round, active, participants } = initValues;
   const [activeParticipant, setActive] = useState(
@@ -132,36 +139,43 @@ const Header = () => {
 
   return (
     <StyledHeader>
-      <Flex $active={active}>
-        {round !== undefined && (
-          <Flex>
-            <IconButton
-              icon="arrow_left"
-              onClick={handlePrev}
-              disabled={round === 1}
-            />
-            <H2>
-              Round <span>{round}</span>
-            </H2>
-            <IconButton icon="arrow_right" onClick={handleNext} />
-          </Flex>
-        )}
-        {active === undefined ? (
-          <H1>Initiative Tracker</H1>
+      <ActionContainer>
+        {round !== undefined ? (
+          <>
+            <Flex>
+              <IconButton
+                icon="arrow_left"
+                onClick={handlePrev}
+                disabled={round === 1}
+              />
+              <H2>
+                Round <span>{round}</span>
+              </H2>
+              <IconButton icon="arrow_right" onClick={handleNext} />
+            </Flex>
+            <Flex>
+              <IconButton icon="arrow_left" onClick={prevTurn} />
+              {activeParticipant ? (
+                <H1 type={activeParticipant.type}>{activeParticipant.name}</H1>
+              ) : (
+                <H1>Selecting...</H1>
+              )}
+              <IconButton icon="arrow_right" onClick={nextTurn} />
+            </Flex>
+          </>
         ) : (
-          <Flex>
-            <IconButton icon="arrow_left" onClick={prevTurn} />
-            {activeParticipant ? (
-              <H1 type={activeParticipant.type}>{activeParticipant.name}</H1>
-            ) : (
-              <H1>Selecting...</H1>
-            )}
-            <IconButton icon="arrow_right" onClick={nextTurn} />
-          </Flex>
+          <H1>Pathfinder 2e Initiative Tracker</H1>
         )}
-      </Flex>
+      </ActionContainer>
+      <NoteAction>
+        <IconButton icon="description" onClick={() => toggleDrawer(true)} />
+      </NoteAction>
     </StyledHeader>
   );
 };
 
 export default Header;
+
+Header.propTypes = {
+  toggleDrawer: PropTypes.func.isRequired,
+};

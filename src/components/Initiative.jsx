@@ -14,6 +14,7 @@ const Div = styled.div`
   flex-direction: column;
   gap: 0.5rem;
   justify-content: space-between;
+  height: 100%;
 `;
 
 const Assigned = styled.div`

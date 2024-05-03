@@ -6,8 +6,8 @@ import InitiativeContext from './context/InitiativeContext';
 import { useEffect, useState } from 'react';
 import { addTouchClass } from './utils/helpers';
 import Notes from './components/Notes';
-import { breakpoints } from './utils/variables';
 import Empty from './components/Empty';
+import { CssBaseline, Drawer, ThemeProvider, createTheme } from '@mui/material';
 
 const INIT = {
   active: undefined,
@@ -17,22 +17,22 @@ const INIT = {
 
 const Main = styled.main`
   padding: 0 1rem 1rem;
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-gap: 1rem;
-
-  @media only screen and (max-width: ${breakpoints.lg}) {
-    grid-template-columns: 3fr 1fr;
-  }
-
-  @media only screen and (max-width: ${breakpoints.md}) {
-    grid-template-columns: auto;
-    grid-template-rows: 4fr 1fr;
-  }
+  flex: 1;
 `;
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 function App() {
   const [initValues, setInitValues] = useState(INIT);
+  const [open, setOpen] = useState(false);
+
+  const toggleDrawer = (newOpen) => {
+    setOpen(newOpen);
+  };
 
   useEffect(() => {
     addTouchClass();
@@ -40,13 +40,23 @@ function App() {
 
   return (
     <InitiativeContext.Provider value={{ initValues, setInitValues }}>
-      <Header />
-      <Main>
-        <Initiative>
-          {initValues.participants.length > 0 ? <List /> : <Empty />}
-        </Initiative>
-        <Notes />
-      </Main>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <Header toggleDrawer={toggleDrawer} />
+        <Main>
+          <Initiative>
+            {initValues.participants.length > 0 ? <List /> : <Empty />}
+          </Initiative>
+          <Drawer
+            keepMounted
+            open={open}
+            onClose={() => toggleDrawer(false)}
+            anchor="right"
+          >
+            <Notes toggleDrawer={toggleDrawer} />
+          </Drawer>
+        </Main>
+      </ThemeProvider>
     </InitiativeContext.Provider>
   );
 }
