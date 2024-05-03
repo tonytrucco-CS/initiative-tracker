@@ -12,8 +12,8 @@ export const globalCSS = css`
 
   #root {
     height: 100dvh;
-    display: grid;
-    grid-template-rows: 60px 1fr;
+    display: flex;
+    flex-direction: column;
   }
 
   *,
