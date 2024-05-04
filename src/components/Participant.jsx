@@ -227,12 +227,7 @@ const Participant = ({
             : null
         }
       >
-        <DragButton
-          icon="drag_indicator"
-          onPointerDown={startDrag}
-          index={index}
-          tabIndex={-1}
-        />
+        <DragButton onPointerDown={startDrag} index={index} tabIndex={-1} />
       </Actions>
       <NameAndType>
         <TypeIcon type={type} />

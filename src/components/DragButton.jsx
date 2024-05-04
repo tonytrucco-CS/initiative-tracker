@@ -1,30 +1,27 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { transparentize } from 'polished';
+import { IconButton } from '@mui/material';
+import { DragIndicator } from '@mui/icons-material';
 import { colors } from '../utils/variables';
 
-const Button = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 2rem;
-  width: 2rem;
-  border-radius: 50%;
-  border: none;
-  background-color: ${transparentize(0.75, colors.black)};
-  color: ${colors.pure_white};
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${transparentize(0.5, colors.black)};
+const StyledIconButton = styled(IconButton)`
+  && {
+    background-color: ${transparentize(0.9, colors.white)};
   }
 `;
 
-const DragButton = ({ onPointerDown, icon, index, ...props }) => {
+const DragButton = ({ onPointerDown, index, ...props }) => {
   return (
-    <Button onPointerDown={(e) => onPointerDown(e, index)} {...props}>
-      <span className="material-symbols-outlined">{icon}</span>
-    </Button>
+    <StyledIconButton
+      onPointerDown={(e) => onPointerDown(e, index)}
+      {...props}
+      sx={{ cursor: 'grab' }}
+      disableRipple
+      disableTouchRipple
+    >
+      <DragIndicator />
+    </StyledIconButton>
   );
 };
 
@@ -32,6 +29,5 @@ export default DragButton;
 
 DragButton.propTypes = {
   onPointerDown: PropTypes.func.isRequired,
-  icon: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
 };

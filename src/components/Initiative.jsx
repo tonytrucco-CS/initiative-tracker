@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { colors } from '../utils/variables';
 import InitiativeHeader from './InitiativeHeader';
-import ActionBar from './ActionBar';
 import { useContext, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import DragContext from '../context/DragContext';
@@ -37,7 +36,6 @@ const Initiative = ({ children }) => {
           {initValues.participants.length > 0 && <InitiativeHeader />}
           {children}
         </Assigned>
-        <ActionBar />
       </DragContext.Provider>
     </Div>
   );

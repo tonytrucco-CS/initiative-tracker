@@ -2,8 +2,13 @@ import styled, { css } from 'styled-components';
 import { colors, fonts } from '../utils/variables';
 import { useContext, useEffect, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
-import IconButton from './IconButton';
 import PropTypes from 'prop-types';
+import { IconButton } from '@mui/material';
+import {
+  ArrowLeft,
+  ArrowRight,
+  DescriptionOutlined,
+} from '@mui/icons-material';
 
 const StyledHeader = styled.header`
   margin: 0;
@@ -38,6 +43,7 @@ const H1 = styled.h1`
   align-items: center;
   gap: 0.5rem;
   border-radius: 0.25rem;
+  user-select: none;
   ${(props) => {
     switch (props.type) {
       case 'pc':
@@ -81,6 +87,7 @@ const H2 = styled.h2`
   color: ${colors.theme.light_gray};
   padding: 0;
   margin: 0;
+  user-select: none;
 
   span {
     font-family: ${fonts.mono};
@@ -152,23 +159,31 @@ const Header = ({ toggleDrawer }) => {
           <>
             <Flex>
               <IconButton
-                icon="arrow_left"
                 onClick={handlePrev}
                 disabled={round === 1}
-              />
+                aria-label="Previous"
+              >
+                <ArrowLeft fontSize="large" />
+              </IconButton>
               <H2>
                 Round <span>{round}</span>
               </H2>
-              <IconButton icon="arrow_right" onClick={handleNext} />
+              <IconButton onClick={handleNext} aria-label="Next">
+                <ArrowRight fontSize="large" />
+              </IconButton>
             </Flex>
             <Flex>
-              <IconButton icon="arrow_left" onClick={prevTurn} />
+              <IconButton onClick={prevTurn} aria-label="Previous">
+                <ArrowLeft fontSize="large" />
+              </IconButton>
               {activeParticipant ? (
                 <H1 type={activeParticipant.type}>{activeParticipant.name}</H1>
               ) : (
                 <H1>Selecting...</H1>
               )}
-              <IconButton icon="arrow_right" onClick={nextTurn} />
+              <IconButton onClick={nextTurn} aria-label="Next">
+                <ArrowRight fontSize="large" />
+              </IconButton>
             </Flex>
           </>
         ) : (
@@ -179,7 +194,13 @@ const Header = ({ toggleDrawer }) => {
         )}
       </ActionContainer>
       <NoteAction>
-        <IconButton icon="description" onClick={() => toggleDrawer(true)} />
+        <IconButton
+          aria-label="Toggle Notes"
+          onClick={() => toggleDrawer(true)}
+          size="large"
+        >
+          <DescriptionOutlined />
+        </IconButton>
       </NoteAction>
     </StyledHeader>
   );

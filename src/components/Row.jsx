@@ -6,6 +6,8 @@ import React, { useContext, useEffect, useRef } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import { keyframes } from 'styled-components';
 import IconButton from './IconButton';
+import { IconButton as MuiIconButton } from '@mui/material';
+import { ArrowRight, Delete } from '@mui/icons-material';
 
 const Flex = styled.div`
   display: grid;
@@ -39,9 +41,6 @@ const Active = styled.div`
   animation-name: ${blinkAnim};
   animation-duration: 1s;
   animation-iteration-count: infinite;
-  span {
-    font-size: 2.5rem;
-  }
 `;
 
 const Div = styled.div`
@@ -202,16 +201,15 @@ const Row = React.forwardRef(
     return (
       <Flex $dragging={dragging} $index={index} ref={ref}>
         <RemoveActive>
-          <IconButton
-            icon="delete"
+          <MuiIconButton
             onClick={handleRemove}
-            $subtle
+            aria-label="Delete Participant"
             tabIndex={round === undefined ? -1 : null}
-          />
+          >
+            <Delete />
+          </MuiIconButton>
           <Active ref={active === index ? viewRef : null}>
-            {active === index && (
-              <span className="material-symbols-outlined">arrow_right</span>
-            )}
+            {active === index && <ArrowRight fontSize="large" />}
           </Active>
         </RemoveActive>
         <Div>
