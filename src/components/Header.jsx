@@ -34,6 +34,9 @@ const Flex = styled.div`
 const H1 = styled.h1`
   padding: 0;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   border-radius: 0.25rem;
   ${(props) => {
     switch (props.type) {
@@ -67,6 +70,11 @@ const H1 = styled.h1`
         `;
     }
   }}
+`;
+
+const Img = styled.img`
+  width: 2rem;
+  height: 2rem;
 `;
 
 const H2 = styled.h2`
@@ -164,7 +172,10 @@ const Header = ({ toggleDrawer }) => {
             </Flex>
           </>
         ) : (
-          <H1>Pathfinder 2e Initiative Tracker</H1>
+          <H1>
+            <Img src="/logo.png" />
+            Pathfinder 2e Initiative Tracker
+          </H1>
         )}
       </ActionContainer>
       <NoteAction>
