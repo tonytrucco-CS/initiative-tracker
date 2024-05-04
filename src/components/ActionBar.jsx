@@ -1,27 +1,41 @@
 import styled from 'styled-components';
 import { colors } from '../utils/variables';
-import Button from './Button';
 import { useContext } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
+import {
+  Button,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
+} from '@mui/material';
+import {
+  Colorize,
+  GroupOutlined,
+  LocalFireDepartment,
+  Person,
+  PlayCircleOutline,
+  StopCircleOutlined,
+} from '@mui/icons-material';
 
 const Nav = styled.nav`
   padding: 0;
   background-color: ${colors.gray200};
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  width: calc(100% - 7rem);
 `;
 
-const Left = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+const StyledSpeedDial = styled(SpeedDial)`
+  position: absolute;
+  bottom: 0;
+  left: 0;
 `;
 
 const Right = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 `;
 
 const ActionBar = () => {
@@ -39,38 +53,31 @@ const ActionBar = () => {
     conditions: [],
   };
 
-  const addPC = () => {
-    const PC = { ...TEMPLATE, type: 'pc' };
-    let newUnassigned = [...initValues.participants];
-    newUnassigned.push(PC);
-    setInitValues({
-      ...initValues,
-      participants: newUnassigned,
-    });
-  };
+  const types = [
+    {
+      icon: <Person />,
+      name: 'Player Character',
+      type: 'pc',
+    },
+    {
+      icon: <Colorize />,
+      name: 'Monster',
+      type: 'foe',
+    },
+    {
+      icon: <GroupOutlined />,
+      name: 'NPC',
+      type: 'ally',
+    },
+    {
+      icon: <LocalFireDepartment />,
+      name: 'Hazard',
+      type: 'hazard',
+    },
+  ];
 
-  const addNPC = () => {
-    const PC = { ...TEMPLATE, type: 'ally' };
-    let newUnassigned = [...initValues.participants];
-    newUnassigned.push(PC);
-    setInitValues({
-      ...initValues,
-      participants: newUnassigned,
-    });
-  };
-
-  const addMonster = () => {
-    const PC = { ...TEMPLATE, type: 'foe' };
-    let newUnassigned = [...initValues.participants];
-    newUnassigned.push(PC);
-    setInitValues({
-      ...initValues,
-      participants: newUnassigned,
-    });
-  };
-
-  const addHazard = () => {
-    const PC = { ...TEMPLATE, type: 'hazard' };
+  const addParticipant = (type) => {
+    const PC = { ...TEMPLATE, type: type };
     let newUnassigned = [...initValues.participants];
     newUnassigned.push(PC);
     setInitValues({
@@ -102,63 +109,41 @@ const ActionBar = () => {
 
   return (
     <Nav>
-      <Left>
-        <Button
-          size="xs"
-          outline
-          unrounded
-          onClick={addPC}
-          color={colors.theme.blue}
-        >
-          Player&nbsp;
-          <span className="material-symbols-outlined">person</span>
-        </Button>
-        <Button
-          size="xs"
-          outline
-          unrounded
-          onClick={addMonster}
-          color={colors.theme.red}
-        >
-          Monster&nbsp;
-          <span className="material-symbols-outlined">
-            sentiment_extremely_dissatisfied
-          </span>
-        </Button>
-        <Button
-          size="xs"
-          outline
-          unrounded
-          onClick={addNPC}
-          color={colors.theme.green}
-        >
-          NPC&nbsp;
-          <span className="material-symbols-outlined">group</span>
-        </Button>
-        <Button
-          size="xs"
-          outline
-          unrounded
-          onClick={addHazard}
-          color={colors.theme.orange}
-        >
-          Hazard&nbsp;
-          <span className="material-symbols-outlined">
-            local_fire_department
-          </span>
-        </Button>
-      </Left>
+      <StyledSpeedDial
+        ariaLabel="Add a Participant"
+        icon={<SpeedDialIcon />}
+        direction="up"
+      >
+        {types.map((participant) => (
+          <SpeedDialAction
+            key={participant.name}
+            icon={participant.icon}
+            tooltipTitle={participant.name}
+            tooltipOpen
+            tooltipPlacement="right"
+            onClick={() => addParticipant(participant.type)}
+          />
+        ))}
+      </StyledSpeedDial>
       <Right>
         {participants.length > 0 && round === undefined && (
-          <Button size="xs" outline unrounded onClick={handleStart}>
-            Fight!&nbsp;
-            <span className="material-symbols-outlined">play_circle</span>
+          <Button
+            size="large"
+            variant="contained"
+            onClick={handleStart}
+            endIcon={<PlayCircleOutline />}
+          >
+            Fight!
           </Button>
         )}
         {participants.length > 0 && round > 0 && (
-          <Button size="xs" outline unrounded onClick={handleEnd}>
-            End Encounter&nbsp;
-            <span className="material-symbols-outlined">stop_circle</span>
+          <Button
+            size="large"
+            variant="contained"
+            onClick={handleEnd}
+            endIcon={<StopCircleOutlined />}
+          >
+            End Encounter
           </Button>
         )}
       </Right>

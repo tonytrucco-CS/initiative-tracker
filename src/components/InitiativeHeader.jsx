@@ -13,6 +13,7 @@ const Span = styled.span`
   color: ${colors.white};
   align-items: center;
   justify-content: space-between;
+  user-select: none;
 
   &:not(:last-of-type) {
     border-right: solid 1px ${colors.theme.light_gray};

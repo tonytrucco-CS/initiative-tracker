@@ -34,7 +34,7 @@ const TypeIcon = ({ type }) => {
     <Span className="material-symbols-outlined" type={type}>
       {type === 'pc' && 'person'}
       {type === 'ally' && 'group'}
-      {type === 'foe' && 'sentiment_extremely_dissatisfied'}
+      {type === 'foe' && 'colorize'}
       {type === 'hazard' && 'local_fire_department'}
     </Span>
   );

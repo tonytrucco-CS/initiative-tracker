@@ -8,6 +8,7 @@ import { addTouchClass } from './utils/helpers';
 import Notes from './components/Notes';
 import Empty from './components/Empty';
 import { CssBaseline, Drawer, ThemeProvider, createTheme } from '@mui/material';
+import ActionBar from './components/ActionBar';
 
 const INIT = {
   active: undefined,
@@ -18,6 +19,7 @@ const INIT = {
 const Main = styled.main`
   padding: 0 1rem 1rem;
   flex: 1;
+  position: relative;
 `;
 
 const darkTheme = createTheme({
@@ -55,6 +57,7 @@ function App() {
           >
             <Notes toggleDrawer={toggleDrawer} />
           </Drawer>
+          <ActionBar />
         </Main>
       </ThemeProvider>
     </InitiativeContext.Provider>
