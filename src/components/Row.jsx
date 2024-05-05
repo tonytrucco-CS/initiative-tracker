@@ -10,7 +10,7 @@ import { ArrowBack, ArrowRight, Delete } from '@mui/icons-material';
 
 const Flex = styled.div`
   display: grid;
-  grid-template-columns: 4em 1fr 4em 4em auto;
+  grid-template-columns: 4em 1fr 4em 4em 3em;
   padding: 0 1rem 0 0.5rem;
   ${(props) => {
     if (props.$dragging === props.$index) {
