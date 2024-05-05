@@ -45,9 +45,7 @@ const ActionBar = () => {
   const { round, participants } = initValues;
 
   const TEMPLATE = {
-    name: `UNKNOWN ${
-      initValues.participants ? initValues.participants.length + 1 : 1
-    }`,
+    name: 'UNKNOWN',
     type: '',
     initiative: 0,
     action: 'normal',
@@ -78,10 +76,34 @@ const ActionBar = () => {
     },
   ];
 
+  // count each type of participant
+  const countType = (type) => {
+    const matchingTypes = participants.filter((part) => part.type === type);
+    return matchingTypes.length + 1;
+  };
+
+  // add a specific type of participant
   const addParticipant = (type) => {
-    const PC = { ...TEMPLATE, type: type };
+    let name = '';
+    switch (type) {
+      case 'pc':
+        name = 'PLAYER CHARACTER';
+        break;
+      case 'ally':
+        name = 'NPC';
+        break;
+      case 'foe':
+        name = 'MONSTER';
+        break;
+
+      case 'hazard':
+        name = 'HAZARD';
+        break;
+    }
+    name += ` ${countType(type)}`;
+    const Participant = { ...TEMPLATE, type: type, name: name };
     let newUnassigned = [...initValues.participants];
-    newUnassigned.push(PC);
+    newUnassigned.push(Participant);
     setInitValues({
       ...initValues,
       participants: newUnassigned,
