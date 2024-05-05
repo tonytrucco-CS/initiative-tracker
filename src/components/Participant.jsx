@@ -12,6 +12,7 @@ import DragContext from '../context/DragContext';
 const Div = styled.div`
   display: flex;
   flex: 1;
+  z-index: 10;
   border-radius: 0.25rem;
   transition: transform 0.6s;
   transition-timing-function: ease-in-out;
@@ -22,11 +23,11 @@ const Div = styled.div`
         return css``;
       case 'delay':
         return css`
-          transform: translateX(2em);
+          transform: translateX(4em);
         `;
       case 'ready':
         return css`
-          transform: translateX(6em);
+          transform: translateX(8em);
         `;
       default:
         return css``;

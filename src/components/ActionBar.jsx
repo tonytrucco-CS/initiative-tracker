@@ -18,24 +18,26 @@ import {
 } from '@mui/icons-material';
 
 const Nav = styled.nav`
-  padding: 0;
+  padding: 0 0.5rem 0.5rem;
   background-color: ${colors.gray200};
-  position: absolute;
-  bottom: 2rem;
-  left: 2rem;
-  width: calc(100% - 7rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 `;
 
-const StyledSpeedDial = styled(SpeedDial)`
-  position: absolute;
-  bottom: 0;
-  left: 0;
+const Left = styled.div`
+  height: 40px;
+  display: flex;
+  align-items: flex-end;
 `;
+
+const StyledSpeedDial = styled(SpeedDial)``;
 
 const Right = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 0;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
 const ActionBar = () => {
@@ -55,22 +57,22 @@ const ActionBar = () => {
 
   const types = [
     {
-      icon: <Person />,
+      icon: <Person sx={{ color: colors.theme.blue }} />,
       name: 'Player Character',
       type: 'pc',
     },
     {
-      icon: <Colorize />,
+      icon: <Colorize sx={{ color: colors.theme.red }} />,
       name: 'Monster',
       type: 'foe',
     },
     {
-      icon: <GroupOutlined />,
+      icon: <GroupOutlined sx={{ color: colors.theme.green }} />,
       name: 'NPC',
       type: 'ally',
     },
     {
-      icon: <LocalFireDepartment />,
+      icon: <LocalFireDepartment sx={{ color: colors.theme.orange }} />,
       name: 'Hazard',
       type: 'hazard',
     },
@@ -109,26 +111,28 @@ const ActionBar = () => {
 
   return (
     <Nav>
-      <StyledSpeedDial
-        ariaLabel="Add a Participant"
-        icon={<SpeedDialIcon />}
-        direction="up"
-      >
-        {types.map((participant) => (
-          <SpeedDialAction
-            key={participant.name}
-            icon={participant.icon}
-            tooltipTitle={participant.name}
-            tooltipOpen
-            tooltipPlacement="right"
-            onClick={() => addParticipant(participant.type)}
-          />
-        ))}
-      </StyledSpeedDial>
+      <Left>
+        <StyledSpeedDial
+          ariaLabel="Add a Participant"
+          icon={<SpeedDialIcon />}
+          direction="up"
+          FabProps={{ size: 'small' }}
+        >
+          {types.map((participant) => (
+            <SpeedDialAction
+              key={participant.name}
+              icon={participant.icon}
+              tooltipTitle={participant.name}
+              tooltipOpen
+              tooltipPlacement="right"
+              onClick={() => addParticipant(participant.type)}
+            />
+          ))}
+        </StyledSpeedDial>
+      </Left>
       <Right>
         {participants.length > 0 && round === undefined && (
           <Button
-            size="large"
             variant="contained"
             onClick={handleStart}
             endIcon={<PlayCircleOutline />}
@@ -138,7 +142,6 @@ const ActionBar = () => {
         )}
         {participants.length > 0 && round > 0 && (
           <Button
-            size="large"
             variant="contained"
             onClick={handleEnd}
             endIcon={<StopCircleOutlined />}
