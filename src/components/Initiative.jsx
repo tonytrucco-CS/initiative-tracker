@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useContext, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import DragContext from '../context/DragContext';
-import { colors } from '../utils/variables';
+import { useTheme } from '@mui/material';
 
 const Div = styled.div`
   display: flex;
@@ -11,7 +11,7 @@ const Div = styled.div`
   gap: 0.5rem;
   justify-content: space-between;
   height: 100%;
-  border-bottom: solid 1px ${colors.theme.light_gray};
+  border-bottom: solid 1px ${({ theme }) => theme.palette.grey[700]};
 `;
 
 const Assigned = styled.div`
@@ -21,8 +21,9 @@ const Assigned = styled.div`
 const Initiative = ({ children }) => {
   const { initValues } = useContext(InitiativeContext);
   const [isDragging, setNoActions] = useState(false);
+  const theme = useTheme();
   return (
-    <Div>
+    <Div theme={theme}>
       <DragContext.Provider value={{ isDragging, setNoActions }}>
         <Assigned
           $isDragging={isDragging}

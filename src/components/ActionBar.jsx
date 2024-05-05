@@ -16,6 +16,7 @@ import {
   PlayCircleOutline,
   StopCircleOutlined,
 } from '@mui/icons-material';
+import _ from 'lodash';
 
 const Nav = styled.nav`
   padding: 0 0.5rem 0.5rem;
@@ -110,11 +111,22 @@ const ActionBar = () => {
     });
   };
 
+  // start a combat
   const handleStart = () => {
-    setInitValues({
-      ...initValues,
-      round: 1,
-      active: 0,
+    setInitValues((prevInit) => {
+      // sort participants by initiative value
+      const updatedParticipants = [...prevInit.participants];
+      const sortedParticipants = _.orderBy(
+        updatedParticipants,
+        'initiative',
+        'desc',
+      );
+      return {
+        ...prevInit,
+        participants: sortedParticipants,
+        round: 1,
+        active: 0,
+      };
     });
   };
 

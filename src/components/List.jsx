@@ -5,7 +5,7 @@ import { useContext, useRef, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import DragContext from '../context/DragContext';
 import IconButton from './IconButton';
-import { colors } from '../utils/variables';
+import { useTheme } from '@mui/material';
 
 const FlexColumns = styled.div`
   display: flex;
@@ -23,7 +23,7 @@ const ScrollButtons = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-left: solid 1px ${colors.theme.light_gray};
+  border-left: solid 1px ${({ theme }) => theme.palette.grey[700]};
   padding: 0.5rem;
 `;
 
@@ -43,6 +43,7 @@ const List = () => {
   const { setNoActions } = useContext(DragContext);
   const { participants } = initValues;
   const [isDragging, setDragging] = useState();
+  const theme = useTheme();
 
   const containerRef = useRef();
   const topRef = useRef();
@@ -210,7 +211,7 @@ const List = () => {
           })}
         </ListContainer>
       </Flex>
-      <ScrollButtons>
+      <ScrollButtons theme={theme}>
         <IconButton icon={'keyboard_arrow_up'} onClick={handleScrollUp} />
         <IconButton icon={'keyboard_arrow_down'} onClick={handleScrollDown} />
       </ScrollButtons>

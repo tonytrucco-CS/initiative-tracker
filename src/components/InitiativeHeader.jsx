@@ -1,10 +1,10 @@
+import { colors } from '@mui/material';
 import styled from 'styled-components';
-import { colors } from '../utils/variables';
 
 const Div = styled.div`
   display: grid;
   grid-template-columns: 4em 1fr 4em 4em 7em 2.75em;
-  border-bottom: solid 1px ${colors.theme.light_gray};
+  border-bottom: solid 1px ${colors.grey};
 `;
 
 const Span = styled.span`
@@ -16,7 +16,7 @@ const Span = styled.span`
   user-select: none;
 
   &:not(:last-of-type) {
-    border-right: solid 1px ${colors.theme.light_gray};
+    border-right: solid 1px ${colors.grey};
   }
 `;
 
