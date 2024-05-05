@@ -2,9 +2,18 @@ import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import { colors } from '../utils/variables';
 import { transparentize } from 'polished';
+import {
+  Colorize,
+  GroupOutlined,
+  LocalFireDepartment,
+  Person,
+} from '@mui/icons-material';
 
 const Span = styled.span`
   padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   ${(props) => {
     switch (props.type) {
       case 'pc':
@@ -31,11 +40,11 @@ const Span = styled.span`
 
 const TypeIcon = ({ type }) => {
   return (
-    <Span className="material-symbols-outlined" type={type}>
-      {type === 'pc' && 'person'}
-      {type === 'ally' && 'group'}
-      {type === 'foe' && 'colorize'}
-      {type === 'hazard' && 'local_fire_department'}
+    <Span type={type}>
+      {type === 'pc' && <Person />}
+      {type === 'ally' && <GroupOutlined />}
+      {type === 'foe' && <Colorize />}
+      {type === 'hazard' && <LocalFireDepartment />}
     </Span>
   );
 };

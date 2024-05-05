@@ -5,11 +5,12 @@ import { useContext, useRef, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import DragContext from '../context/DragContext';
 import IconButton from './IconButton';
-import { breakpoints, colors } from '../utils/variables';
+import { colors } from '../utils/variables';
 
 const FlexColumns = styled.div`
   display: flex;
   flex-direction: row;
+  height: 100%;
 `;
 
 const Flex = styled.div`
@@ -23,7 +24,7 @@ const ScrollButtons = styled.div`
   flex-direction: column;
   justify-content: space-between;
   border-left: solid 1px ${colors.theme.light_gray};
-  padding: 0.5rem 0 0.5rem 0.5rem;
+  padding: 0.5rem;
 `;
 
 const ListContainer = styled.div`
@@ -33,11 +34,8 @@ const ListContainer = styled.div`
   overflow-y: hidden;
   touch-action: none;
   padding: 0.5rem 0;
-  max-height: 79dvh;
-
-  @media only screen and (max-width: ${breakpoints.md}) {
-    max-height: 61dvh;
-  }
+  max-height: 85.1dvh;
+  overflow-x: hidden;
 `;
 
 const List = () => {

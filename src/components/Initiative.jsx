@@ -1,25 +1,20 @@
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { colors } from '../utils/variables';
-import InitiativeHeader from './InitiativeHeader';
 import { useContext, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import DragContext from '../context/DragContext';
+import { colors } from '../utils/variables';
 
 const Div = styled.div`
-  background-color: ${colors.gray200};
-  padding: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   justify-content: space-between;
   height: 100%;
+  border-bottom: solid 1px ${colors.theme.light_gray};
 `;
 
 const Assigned = styled.div`
-  display: grid;
-  grid-template-rows: ${(props) =>
-    props.$hasParticipants ? '2.5em 1fr' : '1fr'};
   flex: 1;
 `;
 
@@ -33,7 +28,6 @@ const Initiative = ({ children }) => {
           $isDragging={isDragging}
           $hasParticipants={initValues.participants.length > 0}
         >
-          {initValues.participants.length > 0 && <InitiativeHeader />}
           {children}
         </Assigned>
       </DragContext.Provider>

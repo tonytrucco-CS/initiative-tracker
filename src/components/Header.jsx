@@ -38,6 +38,7 @@ const Flex = styled.div`
 
 const H1 = styled.h1`
   padding: 0;
+  font-size: 1.75rem;
   margin: 0;
   display: flex;
   align-items: center;
@@ -163,18 +164,18 @@ const Header = ({ toggleDrawer }) => {
                 disabled={round === 1}
                 aria-label="Previous"
               >
-                <ArrowLeft fontSize="large" />
+                <ArrowLeft />
               </IconButton>
               <H2>
                 Round <span>{round}</span>
               </H2>
               <IconButton onClick={handleNext} aria-label="Next">
-                <ArrowRight fontSize="large" />
+                <ArrowRight />
               </IconButton>
             </Flex>
             <Flex>
               <IconButton onClick={prevTurn} aria-label="Previous">
-                <ArrowLeft fontSize="large" />
+                <ArrowLeft />
               </IconButton>
               {activeParticipant ? (
                 <H1 type={activeParticipant.type}>{activeParticipant.name}</H1>
@@ -182,7 +183,7 @@ const Header = ({ toggleDrawer }) => {
                 <H1>Selecting...</H1>
               )}
               <IconButton onClick={nextTurn} aria-label="Next">
-                <ArrowRight fontSize="large" />
+                <ArrowRight />
               </IconButton>
             </Flex>
           </>
@@ -197,7 +198,6 @@ const Header = ({ toggleDrawer }) => {
         <IconButton
           aria-label="Toggle Notes"
           onClick={() => toggleDrawer(true)}
-          size="large"
         >
           <DescriptionOutlined />
         </IconButton>

@@ -2,16 +2,16 @@
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 import { colors } from '../utils/variables';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import { keyframes } from 'styled-components';
-import IconButton from './IconButton';
-import { IconButton as MuiIconButton } from '@mui/material';
-import { ArrowRight, Delete } from '@mui/icons-material';
+import { Badge, Chip, IconButton, Tooltip } from '@mui/material';
+import { ArrowBack, ArrowRight, Delete } from '@mui/icons-material';
 
 const Flex = styled.div`
   display: grid;
-  grid-template-columns: 4em 1fr 4em 4em 7em;
+  grid-template-columns: 4em 1fr 4em 4em auto;
+  padding: 0 1rem 0 0.5rem;
   ${(props) => {
     if (props.$dragging === props.$index) {
       return css`
@@ -19,6 +19,11 @@ const Flex = styled.div`
       `;
     }
   }}
+`;
+
+// for filling in the skull icon
+const Span = styled.span`
+  font-variation-settings: 'FILL' ${(props) => (props.$alive ? 0 : 1)};
 `;
 
 const blinkAnim = keyframes`
@@ -65,6 +70,7 @@ const Row = React.forwardRef(
   ({ children, status, name, action, dragging, index, type }, ref) => {
     const { initValues, setInitValues } = useContext(InitiativeContext);
     const { participants, active, round } = initValues;
+    const [badgeCount, setBadgeCount] = useState(0);
 
     const viewRef = useRef();
 
@@ -110,40 +116,19 @@ const Row = React.forwardRef(
       });
     };
 
-    // check if the skulls should be marked as filled or not when dying
-    const checkFilled = (value) => {
-      let filled = false;
-      if (value === 'dying1') {
-        if (status === 'dying1' || status === 'dying2' || status === 'dying3') {
-          filled = true;
-        }
-      } else if (value === 'dying2') {
-        if (status === 'dying2' || status === 'dying3') {
-          filled = true;
-        }
-      } else if (value === 'dying3') {
-        if (status === 'dying3') {
-          filled = true;
-        }
-      }
-      return filled;
-    };
-
     // handle clicking of skulls for managing dying status
-    const handleDying = (status) => {
+    const handleDying = () => {
       const updatedValues = participants.map((part) => {
         if (part.name === name) {
-          if (part.status === status) {
-            switch (part.status) {
-              case 'dying1':
-                return { ...part, status: 'alive' };
-              case 'dying2':
-                return { ...part, status: 'dying1' };
-              case 'dying3':
-                return { ...part, status: 'dying2' };
-            }
-          } else {
-            return { ...part, status: status };
+          switch (part.status) {
+            case 'dying1':
+              return { ...part, status: 'dying2' };
+            case 'dying2':
+              return { ...part, status: 'dying3' };
+            case 'dying3':
+              return { ...part, status: 'alive' };
+            default:
+              return { ...part, status: 'dying1' };
           }
         }
         return part;
@@ -198,16 +183,37 @@ const Row = React.forwardRef(
         });
       }
     }, [active, index]);
+
+    // set the badge count for dying condition
+    useEffect(() => {
+      let newBadge = badgeCount;
+      switch (status) {
+        case 'dying1':
+          newBadge = 1;
+          break;
+        case 'dying2':
+          newBadge = 2;
+          break;
+        case 'dying3':
+          newBadge = 3;
+          break;
+        default:
+          newBadge = 0;
+      }
+      setBadgeCount(newBadge);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [status]);
+
     return (
       <Flex $dragging={dragging} $index={index} ref={ref}>
         <RemoveActive>
-          <MuiIconButton
+          <IconButton
             onClick={handleRemove}
             aria-label="Delete Participant"
             tabIndex={round === undefined ? -1 : null}
           >
             <Delete />
-          </MuiIconButton>
+          </IconButton>
           <Active ref={active === index ? viewRef : null}>
             {active === index && <ArrowRight fontSize="large" />}
           </Active>
@@ -216,58 +222,57 @@ const Row = React.forwardRef(
           {action !== 'normal' && (
             <IconButton
               onClick={handleClear}
-              icon={'arrow_left_alt'}
               style={{ position: 'absolute' }}
               tabIndex={round === undefined ? -1 : null}
-            />
+              aria-label="Reset"
+            >
+              <ArrowBack />
+            </IconButton>
           )}
           {children}
         </Div>
         <Action>
           {action === 'normal' && (
-            <IconButton
-              icon={'chevron_right'}
+            <Chip
               onClick={handleDelay}
-              $subtle
+              variant="outlined"
+              label="Delay"
               tabIndex={round === undefined ? -1 : null}
             />
           )}
         </Action>
         <Action>
           {(action === 'normal' || action === 'delay') && (
-            <IconButton
+            <Chip
               onClick={handleReady}
-              icon={'keyboard_double_arrow_right'}
-              $subtle
+              variant="outlined"
+              label="Ready"
               tabIndex={round === undefined ? -1 : null}
             />
           )}
         </Action>
         <Dying>
           {type !== 'hazard' && (
-            <>
-              <IconButton
-                icon="skull"
-                onClick={() => handleDying('dying1')}
-                tabIndex={round === undefined ? -1 : null}
-                filled={checkFilled('dying1')}
-                $subtle={status === 'alive'}
-              />
-              <IconButton
-                icon="skull"
-                onClick={() => handleDying('dying2')}
-                tabIndex={round === undefined ? -1 : null}
-                filled={checkFilled('dying2')}
-                $subtle={status === 'alive'}
-              />
-              <IconButton
-                icon="skull"
-                onClick={() => handleDying('dying3')}
-                tabIndex={round === undefined ? -1 : null}
-                filled={checkFilled('dying3')}
-                $subtle={status === 'alive'}
-              />
-            </>
+            <Badge
+              badgeContent={badgeCount}
+              color={status === 'dying3' ? 'error' : 'warning'}
+            >
+              <Tooltip title={status} enterDelay={750}>
+                <IconButton
+                  aria-label="Set Dying Status"
+                  onClick={handleDying}
+                  tabIndex={round === undefined ? -1 : null}
+                  sx={{ opacity: status === 'alive' ? '0.5' : '1' }}
+                >
+                  <Span
+                    className="material-symbols-outlined"
+                    $alive={status === 'alive'}
+                  >
+                    skull
+                  </Span>
+                </IconButton>
+              </Tooltip>
+            </Badge>
           )}
         </Dying>
       </Flex>

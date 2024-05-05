@@ -7,8 +7,10 @@ import { useEffect, useState } from 'react';
 import { addTouchClass } from './utils/helpers';
 import Notes from './components/Notes';
 import Empty from './components/Empty';
-import { CssBaseline, Drawer, ThemeProvider, createTheme } from '@mui/material';
+import { CssBaseline, Drawer, ThemeProvider } from '@mui/material';
 import ActionBar from './components/ActionBar';
+import { darkTheme } from './styles/Theme';
+import { colors } from './utils/variables';
 
 const INIT = {
   active: undefined,
@@ -17,16 +19,13 @@ const INIT = {
 };
 
 const Main = styled.main`
-  padding: 0 1rem 1rem;
+  margin: 0 1rem 1rem;
   flex: 1;
   position: relative;
+  display: grid;
+  grid-template-rows: 1fr 56px;
+  background-color: ${colors.gray200};
 `;
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
 
 function App() {
   const [initValues, setInitValues] = useState(INIT);
@@ -49,16 +48,16 @@ function App() {
           <Initiative>
             {initValues.participants.length > 0 ? <List /> : <Empty />}
           </Initiative>
-          <Drawer
-            keepMounted
-            open={open}
-            onClose={() => toggleDrawer(false)}
-            anchor="right"
-          >
-            <Notes toggleDrawer={toggleDrawer} />
-          </Drawer>
           <ActionBar />
         </Main>
+        <Drawer
+          keepMounted
+          open={open}
+          onClose={() => toggleDrawer(false)}
+          anchor="right"
+        >
+          <Notes toggleDrawer={toggleDrawer} />
+        </Drawer>
       </ThemeProvider>
     </InitiativeContext.Provider>
   );
