@@ -4,8 +4,8 @@ import Row from './Row';
 import { useContext, useRef, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import DragContext from '../context/DragContext';
-import IconButton from './IconButton';
-import { useTheme } from '@mui/material';
+import { IconButton, useTheme } from '@mui/material';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 
 const FlexColumns = styled.div`
   display: flex;
@@ -23,7 +23,7 @@ const ScrollButtons = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-left: solid 1px ${({ theme }) => theme.palette.grey[700]};
+  border-left: solid 1px ${({ theme }) => theme.palette.grey[800]};
   padding: 0.5rem;
 `;
 
@@ -191,7 +191,6 @@ const List = () => {
                 key={index}
                 status={status}
                 name={name}
-                action={action}
                 dragging={isDragging}
                 type={type}
                 index={index}
@@ -212,8 +211,12 @@ const List = () => {
         </ListContainer>
       </Flex>
       <ScrollButtons theme={theme}>
-        <IconButton icon={'keyboard_arrow_up'} onClick={handleScrollUp} />
-        <IconButton icon={'keyboard_arrow_down'} onClick={handleScrollDown} />
+        <IconButton onClick={handleScrollUp} size="small">
+          <KeyboardArrowUp />
+        </IconButton>
+        <IconButton onClick={handleScrollDown} size="small">
+          <KeyboardArrowDown />
+        </IconButton>
       </ScrollButtons>
     </FlexColumns>
   );

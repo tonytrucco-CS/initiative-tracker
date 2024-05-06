@@ -47,5 +47,13 @@ export const darkTheme = createTheme({
         },
       },
     },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          fontSize: '1rem',
+          fontFamily: fonts.button,
+        },
+      },
+    },
   },
 });

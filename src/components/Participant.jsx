@@ -4,9 +4,17 @@ import { colors, fonts } from '../utils/variables';
 import TypeIcon from './TypeIcon';
 import { transparentize } from 'polished';
 import DragButton from './DragButton';
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import DragContext from '../context/DragContext';
+import {
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+} from '@mui/material';
+import { Delete, MoreVert } from '@mui/icons-material';
 
 const Div = styled.div`
   display: flex;
@@ -166,8 +174,21 @@ const Participant = ({
   botRef,
 }) => {
   const { initValues, setInitValues } = useContext(InitiativeContext);
+  const { active, round } = initValues;
   const { participants } = initValues;
   const { isDragging } = useContext(DragContext);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  // set the anchor element
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  // undo anchor element for menu
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const partRef = useRef();
 
@@ -195,6 +216,41 @@ const Participant = ({
 
   const handleSelect = (e) => {
     e.target.select();
+  };
+
+  // remove a participant
+  const handleRemove = () => {
+    const toRemove = index;
+    if (participants.length === 1) {
+      // basically we reset the app if all participants are removed
+      setInitValues({
+        round: undefined,
+        active: undefined,
+        participants: [],
+      });
+      return;
+    }
+    // if it's the last participant in the array being removed
+    if (participants.length - 1 === index) {
+      setInitValues((prevInit) => ({
+        ...prevInit,
+        active: index === active ? 0 : prevInit.active,
+        round:
+          index === active && round !== undefined
+            ? prevInit.round + 1
+            : prevInit.round,
+        participants: prevInit.participants.filter(
+          (_, index) => index !== toRemove,
+        ),
+      }));
+    } else {
+      setInitValues((prevInit) => ({
+        ...prevInit,
+        participants: prevInit.participants.filter(
+          (_, index) => index !== toRemove,
+        ),
+      }));
+    }
   };
 
   // when adding a participant, make sure the view is scrolled to it
@@ -236,6 +292,23 @@ const Participant = ({
         onChange={(e) => handleInit(e)}
         onClick={handleSelect}
       />
+      <IconButton onClick={handleClick}>
+        <MoreVert />
+      </IconButton>
+      <Menu
+        anchorEl={anchorEl}
+        id="part-menu"
+        open={open}
+        onClose={handleClose}
+        onClick={handleClose}
+      >
+        <MenuItem onClick={handleRemove}>
+          <ListItemIcon>
+            <Delete />
+          </ListItemIcon>
+          <ListItemText>Remove {name}</ListItemText>
+        </MenuItem>
+      </Menu>
     </Div>
   );
 };
