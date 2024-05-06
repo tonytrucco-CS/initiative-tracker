@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { breakpoints, colors, fonts } from '../utils/variables';
 import { transparentize } from 'polished';
 import PropTypes from 'prop-types';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 const Div = styled.div`
@@ -60,12 +60,14 @@ const Notes = ({ toggleDrawer }) => {
     <Div>
       <Flex>
         <H2>Notes</H2>
-        <IconButton
-          aria-label="Close Notes Drawer"
-          onClick={() => toggleDrawer(false)}
-        >
-          <Close />
-        </IconButton>
+        <Tooltip title="Close Notes Drawer" enterDelay={750}>
+          <IconButton
+            aria-label="Close Notes Drawer"
+            onClick={() => toggleDrawer(false)}
+          >
+            <Close />
+          </IconButton>
+        </Tooltip>
       </Flex>
       <TextArea name="Notes" />
     </Div>

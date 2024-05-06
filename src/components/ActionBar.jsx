@@ -20,7 +20,6 @@ import _ from 'lodash';
 
 const Nav = styled.nav`
   padding: 0 0.5rem 0.5rem;
-  background-color: ${colors.gray200};
   display: flex;
   justify-content: space-between;
   align-items: flex-end;

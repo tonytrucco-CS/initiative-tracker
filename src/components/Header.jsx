@@ -3,7 +3,7 @@ import { colors, fonts } from '../utils/variables';
 import { useContext, useEffect, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import PropTypes from 'prop-types';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import {
   ArrowLeft,
   ArrowRight,
@@ -195,12 +195,14 @@ const Header = ({ toggleDrawer }) => {
         )}
       </ActionContainer>
       <NoteAction>
-        <IconButton
-          aria-label="Toggle Notes"
-          onClick={() => toggleDrawer(true)}
-        >
-          <DescriptionOutlined />
-        </IconButton>
+        <Tooltip title="Open Notes" enterDelay={750}>
+          <IconButton
+            aria-label="Toggle Notes"
+            onClick={() => toggleDrawer(true)}
+          >
+            <DescriptionOutlined />
+          </IconButton>
+        </Tooltip>
       </NoteAction>
     </StyledHeader>
   );

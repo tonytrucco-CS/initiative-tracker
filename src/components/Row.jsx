@@ -1,17 +1,27 @@
 /* eslint-disable react/display-name */
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
-import { colors } from '../utils/variables';
+import { colors, fonts } from '../utils/variables';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import { keyframes } from 'styled-components';
-import { Badge, Chip, IconButton, Tooltip } from '@mui/material';
-import { ArrowBack, ArrowRight, Delete } from '@mui/icons-material';
+import {
+  Badge,
+  Chip,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import { ArrowBack, ArrowRight } from '@mui/icons-material';
+import ActionIcon from './ActionIcon';
 
 const Flex = styled.div`
   display: grid;
-  grid-template-columns: 4em 1fr 4em 4em 3em;
+  grid-template-columns: 2em 1fr 4em 4em 3em;
+  grid-gap: 0.25rem;
   padding: 0 1rem 0 0.5rem;
+  align-items: center;
   ${(props) => {
     if (props.$dragging === props.$index) {
       return css`
@@ -54,12 +64,6 @@ const Div = styled.div`
   align-items: center;
 `;
 
-const Action = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 const Dying = styled.div`
   display: flex;
   gap: 0.25rem;
@@ -67,10 +71,13 @@ const Dying = styled.div`
 `;
 
 const Row = React.forwardRef(
-  ({ children, status, name, action, dragging, index, type }, ref) => {
+  ({ children, status, name, dragging, index, type }, ref) => {
     const { initValues, setInitValues } = useContext(InitiativeContext);
     const { participants, active, round } = initValues;
     const [badgeCount, setBadgeCount] = useState(0);
+
+    // get this participant
+    const participant = participants[index];
 
     const viewRef = useRef();
 
@@ -139,41 +146,6 @@ const Row = React.forwardRef(
       });
     };
 
-    // remove a participant
-    const handleRemove = () => {
-      const toRemove = index;
-      if (participants.length === 1) {
-        // basically we reset the app if all participants are removed
-        setInitValues({
-          round: undefined,
-          active: undefined,
-          participants: [],
-        });
-        return;
-      }
-      // if it's the last participant in the array being removed
-      if (participants.length - 1 === index) {
-        setInitValues((prevInit) => ({
-          ...prevInit,
-          active: index === active ? 0 : prevInit.active,
-          round:
-            index === active && round !== undefined
-              ? prevInit.round + 1
-              : prevInit.round,
-          participants: prevInit.participants.filter(
-            (_, index) => index !== toRemove,
-          ),
-        }));
-      } else {
-        setInitValues((prevInit) => ({
-          ...prevInit,
-          participants: prevInit.participants.filter(
-            (_, index) => index !== toRemove,
-          ),
-        }));
-      }
-    };
-
     // can we scroll the active player into view?
     useEffect(() => {
       if (active === index) {
@@ -207,19 +179,12 @@ const Row = React.forwardRef(
     return (
       <Flex $dragging={dragging} $index={index} ref={ref}>
         <RemoveActive>
-          <IconButton
-            onClick={handleRemove}
-            aria-label="Delete Participant"
-            tabIndex={round === undefined ? -1 : null}
-          >
-            <Delete />
-          </IconButton>
           <Active ref={active === index ? viewRef : null}>
             {active === index && <ArrowRight fontSize="large" />}
           </Active>
         </RemoveActive>
         <Div>
-          {action !== 'normal' && (
+          <Tooltip title="Reset" enterDelay={750}>
             <IconButton
               onClick={handleClear}
               style={{ position: 'absolute' }}
@@ -228,39 +193,52 @@ const Row = React.forwardRef(
             >
               <ArrowBack />
             </IconButton>
-          )}
+          </Tooltip>
           {children}
         </Div>
-        <Action>
-          {action === 'normal' && (
-            <Chip
-              onClick={handleDelay}
-              variant="outlined"
-              label="Delay"
-              tabIndex={round === undefined ? -1 : null}
-            />
-          )}
-        </Action>
-        <Action>
-          {(action === 'normal' || action === 'delay') && (
-            <Chip
-              onClick={handleReady}
-              variant="outlined"
-              label="Ready"
-              tabIndex={round === undefined ? -1 : null}
-            />
-          )}
-        </Action>
+        <Tooltip
+          title={
+            <Stack direction={'row'} alignItems={'center'} gap={0.5}>
+              <ActionIcon actions={0} />
+              <Typography fontFamily={fonts.button}>Delay Turn</Typography>
+            </Stack>
+          }
+        >
+          <Chip
+            onClick={handleDelay}
+            variant="outlined"
+            label="Delay"
+            disabled={participant.action === 'delay' || !round}
+            tabIndex={round === undefined ? -1 : null}
+          />
+        </Tooltip>
+        <Tooltip
+          title={
+            <Stack direction={'row'} alignItems={'center'} gap={0.5}>
+              <ActionIcon actions={2} />
+              <Typography fontFamily={fonts.button}>Ready an Action</Typography>
+            </Stack>
+          }
+        >
+          <Chip
+            onClick={handleReady}
+            variant="outlined"
+            label="Ready"
+            disabled={participant.action === 'ready' || !round}
+            tabIndex={round === undefined ? -1 : null}
+          />
+        </Tooltip>
         <Dying>
           {type !== 'hazard' && (
             <Badge
               badgeContent={badgeCount}
               color={status === 'dying3' ? 'error' : 'warning'}
             >
-              <Tooltip title={status} enterDelay={750}>
+              <Tooltip title="Set Dying Status" enterDelay={750}>
                 <IconButton
                   aria-label="Set Dying Status"
                   onClick={handleDying}
+                  disabled={!round}
                   tabIndex={round === undefined ? -1 : null}
                   sx={{ opacity: status === 'alive' ? '0.5' : '1' }}
                 >
@@ -286,7 +264,6 @@ Row.propTypes = {
   children: PropTypes.node.isRequired,
   status: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  action: PropTypes.string.isRequired,
   dragging: PropTypes.number,
   index: PropTypes.number.isRequired,
   type: PropTypes.string.isRequired,
