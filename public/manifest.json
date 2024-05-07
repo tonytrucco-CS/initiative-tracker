@@ -1,0 +1,15 @@
+{
+  "short_name": "Initiative Tracker",
+  "name": "Pathfinder 2e Initiative Tracker",
+  "icons": [
+    {
+      "src": "logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#101214",
+  "background_color": "#101214"
+}
