@@ -32,4 +32,14 @@ export const globalCSS = css`
       cursor: pointer;
     }
   }
+
+  *::-webkit-scrollbar {
+    width: 0.5em;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 0.25em;
+    border: solid 2px rgba(0, 0, 0, 0);
+  }
 `;

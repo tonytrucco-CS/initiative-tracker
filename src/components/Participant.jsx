@@ -8,41 +8,25 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import DragContext from '../context/DragContext';
 import {
+  Divider,
   IconButton,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
+  Stack,
 } from '@mui/material';
 import { Delete, MoreVert } from '@mui/icons-material';
+import Conditions from './Conditions';
+import ActionIcon from './ActionIcon';
+import DyingAction from './DyingAction';
+import _ from 'lodash';
 
 const Div = styled.div`
-  display: flex;
   flex: 1;
   z-index: 10;
   border-radius: 0.25rem;
-  transition: transform 0.6s;
-  transition-timing-function: ease-in-out;
   cursor: default;
-  ${(props) => {
-    switch (props.action) {
-      case 'normal':
-        return css``;
-      case 'delay':
-        return css`
-          transform: translateX(4em);
-        `;
-      case 'ready':
-        return css`
-          transform: translateX(8em);
-        `;
-      default:
-        return css``;
-    }
-  }}
-  border: solid 3px;
-  align-items: center;
-  justify-content: space-between;
   box-shadow: 4px 4px 0.5rem ${transparentize(0.5, colors.black)};
   touch-action: ${(props) => (props.$dragging ? 'none' : null)};
   ${(props) => {
@@ -84,8 +68,9 @@ const NameAndType = styled.span`
 `;
 
 const Input = styled.input`
-  background-color: ${colors.gray600};
+  background-color: ${transparentize(0.9, colors.black)};
   border-radius: 0.25rem;
+  color: ${(props) => (props.$type === 'hazard' ? colors.black : colors.white)};
   height: 2.5rem;
   border: none;
   font-family: ${fonts.body};
@@ -95,7 +80,7 @@ const Input = styled.input`
 
   &:focus {
     outline: none;
-    background-color: ${colors.white};
+    background-color: ${transparentize(0.75, colors.black)};
   }
 `;
 
@@ -167,15 +152,16 @@ const Participant = ({
   name,
   type = 'pc',
   initiative,
-  action = 'normal',
+  conditions = [],
+  status = 'alive',
   index,
   startDrag,
   topRef,
   botRef,
 }) => {
   const { initValues, setInitValues } = useContext(InitiativeContext);
-  const { active, round } = initValues;
-  const { participants } = initValues;
+  const { active, round, participants } = initValues;
+  const currentPart = participants[index];
   const { isDragging } = useContext(DragContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -192,6 +178,7 @@ const Participant = ({
 
   const partRef = useRef();
 
+  // give participant a name
   const handleName = (e) => {
     setInitValues((prevInit) => {
       const updatedParticipants = [...prevInit.participants];
@@ -203,6 +190,7 @@ const Participant = ({
     });
   };
 
+  // set initiative value
   const handleInit = (e) => {
     setInitValues((prevInit) => {
       const updatedParticipants = [...prevInit.participants];
@@ -216,6 +204,37 @@ const Participant = ({
 
   const handleSelect = (e) => {
     e.target.select();
+  };
+
+  // are we adding or removing delay/ready from the conditions list?
+  const handleActionStatus = (action) => {
+    const updatedValues = participants.map((part) => {
+      if (part.name === name) {
+        let conArray = [...part.conditions];
+        // do we need to remove the condition?
+        if (action === 'normal') {
+          _.remove(conArray, (con) => con === 'delay' || con === 'ready');
+        } else {
+          if (_.includes(conArray, action)) {
+            _.remove(conArray, (con) => con === action);
+          } else if (!_.includes(conArray, action) && action !== 'normal') {
+            conArray.push(action);
+          }
+          if (action === 'delay') {
+            _.remove(conArray, (con) => con === 'ready');
+          }
+          if (action === 'ready') {
+            _.remove(conArray, (con) => con === 'delay');
+          }
+        }
+        return { ...part, conditions: conArray };
+      }
+      return part;
+    });
+    setInitValues({
+      ...initValues,
+      participants: updatedValues,
+    });
   };
 
   // remove a participant
@@ -261,54 +280,101 @@ const Participant = ({
   }, []);
 
   return (
-    <Div type={type} action={action} $dragging={isDragging} ref={partRef}>
-      <Actions
-        ref={
-          index === 0
-            ? topRef
-            : index === participants.length - 1
-            ? botRef
-            : null
-        }
-      >
-        <DragButton onPointerDown={startDrag} index={index} tabIndex={-1} />
-      </Actions>
-      <NameAndType>
-        <TypeIcon type={type} />
-        <Input
-          type="text"
-          placeholder="Name this Participant"
-          value={name}
-          name="Participant"
-          onChange={(e) => handleName(e)}
-          onClick={handleSelect}
+    <Div type={type} $dragging={isDragging} ref={partRef}>
+      <Stack alignItems={'flex-start'} width={'100%'} gap={0.75}>
+        <Stack
+          direction={'row'}
+          alignItems={'center'}
+          justifyContent={'space-between'}
+          width={'100%'}
+          pt={0.5}
+          px={0.5}
+        >
+          <Actions
+            ref={
+              index === 0
+                ? topRef
+                : index === participants.length - 1
+                ? botRef
+                : null
+            }
+          >
+            <DragButton
+              onPointerDown={startDrag}
+              index={index}
+              type={type}
+              tabIndex={-1}
+            />
+          </Actions>
+          <NameAndType>
+            <TypeIcon type={type} />
+            <Input
+              type="text"
+              placeholder="Name this Participant"
+              value={name}
+              name="Participant"
+              onChange={(e) => handleName(e)}
+              onClick={handleSelect}
+              $type={type}
+            />
+          </NameAndType>
+          <Initiative
+            $type={type}
+            type="number"
+            value={initiative}
+            name="Initiative"
+            onChange={(e) => handleInit(e)}
+            onClick={handleSelect}
+          />
+          <IconButton
+            onClick={handleClick}
+            tabIndex={round === undefined ? -1 : null}
+            sx={{ color: type === 'hazard' ? colors.black : null }}
+          >
+            <MoreVert />
+          </IconButton>
+          <DyingAction name={name} type={type} status={status} />
+          <Menu
+            anchorEl={anchorEl}
+            id="part-menu"
+            open={open}
+            onClose={handleClose}
+            onClick={handleClose}
+          >
+            <MenuItem
+              onClick={() => handleActionStatus('delay')}
+              disabled={round === undefined || _.includes(conditions, 'delay')}
+            >
+              <ListItemIcon>
+                <ActionIcon actions={0} />
+              </ListItemIcon>
+              <ListItemText>Delay Turn</ListItemText>
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleActionStatus('ready')}
+              disabled={round === undefined || _.includes(conditions, 'ready')}
+            >
+              <ListItemIcon>
+                <ActionIcon actions={2} />
+              </ListItemIcon>
+              <ListItemText>Ready Action</ListItemText>
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={handleRemove}>
+              <ListItemIcon>
+                <Delete />
+              </ListItemIcon>
+              <ListItemText>Remove {name}</ListItemText>
+            </MenuItem>
+          </Menu>
+        </Stack>
+        <Divider flexItem />
+        <Conditions
+          conditions={currentPart.conditions}
+          index={index}
+          type={type}
         />
-      </NameAndType>
-      <Initiative
-        $type={type}
-        type="number"
-        value={initiative}
-        name="Initiative"
-        onChange={(e) => handleInit(e)}
-        onClick={handleSelect}
-      />
-      <IconButton onClick={handleClick}>
-        <MoreVert />
-      </IconButton>
-      <Menu
-        anchorEl={anchorEl}
-        id="part-menu"
-        open={open}
-        onClose={handleClose}
-        onClick={handleClose}
-      >
-        <MenuItem onClick={handleRemove}>
-          <ListItemIcon>
-            <Delete />
-          </ListItemIcon>
-          <ListItemText>Remove {name}</ListItemText>
-        </MenuItem>
-      </Menu>
+      </Stack>
     </Div>
   );
 };
@@ -319,7 +385,8 @@ Participant.propTypes = {
   name: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['pc', 'ally', 'foe', 'hazard']).isRequired,
   initiative: PropTypes.number.isRequired,
-  action: PropTypes.oneOf(['normal', 'ready', 'delay']).isRequired,
+  status: PropTypes.oneOf(['alive', 'dying1', 'dying2', 'dying3']),
+  conditions: PropTypes.array.isRequired,
   index: PropTypes.number.isRequired,
   startDrag: PropTypes.func.isRequired,
   topRef: PropTypes.shape({

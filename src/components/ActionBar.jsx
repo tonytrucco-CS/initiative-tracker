@@ -48,7 +48,6 @@ const ActionBar = () => {
     name: 'UNKNOWN',
     type: '',
     initiative: 0,
-    action: 'normal',
     status: 'alive',
     conditions: [],
   };
@@ -134,7 +133,11 @@ const ActionBar = () => {
     // keep the PCs
     const onlyPCs = initValues.participants
       .filter((participant) => participant.type === 'pc')
-      .map((participant) => ({ ...participant, initiative: 0 }));
+      .map((participant) => ({
+        ...participant,
+        initiative: 0,
+        conditions: [],
+      }));
     setInitValues({
       round: undefined,
       active: undefined,

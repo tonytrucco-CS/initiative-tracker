@@ -4,38 +4,31 @@ import Row from './Row';
 import { useContext, useRef, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import DragContext from '../context/DragContext';
-import { IconButton, useTheme } from '@mui/material';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
-
-const FlexColumns = styled.div`
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-`;
+import _ from 'lodash';
+import { breakpoints } from '../utils/variables';
 
 const Flex = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1;
-`;
-
-const ScrollButtons = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-left: solid 1px ${({ theme }) => theme.palette.grey[800]};
-  padding: 0.5rem;
+  height: 100%;
 `;
 
 const ListContainer = styled.div`
   display: flex;
   gap: 0.25rem;
   flex-direction: column;
-  overflow-y: hidden;
   touch-action: none;
   padding: 0.5rem 0;
-  max-height: 85.1dvh;
+  max-height: 86.1dvh;
   overflow-x: hidden;
+
+  @media only screen and (max-width: ${breakpoints.md}) {
+    max-height: 82.9dvh;
+  }
+
+  @media only screen and (max-width: ${breakpoints.sm}) and (orientation: portrait) {
+    max-height: 87.1dvh;
+  }
 `;
 
 const List = () => {
@@ -43,12 +36,12 @@ const List = () => {
   const { setNoActions } = useContext(DragContext);
   const { participants } = initValues;
   const [isDragging, setDragging] = useState();
-  const theme = useTheme();
 
   const containerRef = useRef();
   const topRef = useRef();
   const botRef = useRef();
 
+  // begin to drag a participant
   function startDrag(e, index) {
     if (!detectLeftButton(e)) return;
 
@@ -63,7 +56,7 @@ const List = () => {
     const dragItem = items[index];
     const itemsBelowDragItem = items.slice(index + 1);
     const notDragItems = items.filter((_, i) => i !== index);
-    const dragData = participants[index];
+    let dragData = participants[index];
     let newParticipants = participants;
 
     // get original position of mouse
@@ -103,6 +96,8 @@ const List = () => {
           newParticipants = participants.filter(
             (item) => item.name !== dragData.name,
           );
+          _.remove(dragData.conditions, (con) => con === 'delay');
+          _.remove(dragData.conditions, (con) => con === 'ready');
           newParticipants.splice(index, 0, dragData);
         }
       });
@@ -168,57 +163,36 @@ const List = () => {
     return button === 1;
   };
 
-  const handleScrollUp = () => {
-    topRef.current.scrollIntoView({
-      behavior: 'smooth',
-    });
-  };
-
-  const handleScrollDown = () => {
-    botRef.current.scrollIntoView({
-      behavior: 'smooth',
-    });
-  };
-
   return (
-    <FlexColumns>
-      <Flex>
-        <ListContainer ref={containerRef}>
-          {participants.map((part, index) => {
-            const { name, type, initiative, action, status } = part;
-            return (
-              <Row
-                key={index}
-                status={status}
+    <Flex>
+      <ListContainer ref={containerRef}>
+        {participants.map((part, index) => {
+          const { name, type, initiative, conditions, status } = part;
+          return (
+            <Row
+              key={index}
+              status={status}
+              name={name}
+              dragging={isDragging}
+              type={type}
+              index={index}
+            >
+              <Participant
                 name={name}
-                dragging={isDragging}
                 type={type}
+                initiative={initiative}
+                conditions={conditions}
+                status={status}
                 index={index}
-              >
-                <Participant
-                  name={name}
-                  type={type}
-                  initiative={initiative}
-                  action={action}
-                  index={index}
-                  startDrag={startDrag}
-                  topRef={topRef}
-                  botRef={botRef}
-                />
-              </Row>
-            );
-          })}
-        </ListContainer>
-      </Flex>
-      <ScrollButtons theme={theme}>
-        <IconButton onClick={handleScrollUp} size="small">
-          <KeyboardArrowUp />
-        </IconButton>
-        <IconButton onClick={handleScrollDown} size="small">
-          <KeyboardArrowDown />
-        </IconButton>
-      </ScrollButtons>
-    </FlexColumns>
+                startDrag={startDrag}
+                topRef={topRef}
+                botRef={botRef}
+              />
+            </Row>
+          );
+        })}
+      </ListContainer>
+    </Flex>
   );
 };
 
