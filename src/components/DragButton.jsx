@@ -11,12 +11,12 @@ const StyledIconButton = styled(IconButton)`
   }
 `;
 
-const DragButton = ({ onPointerDown, index, ...props }) => {
+const DragButton = ({ onPointerDown, type, index, ...props }) => {
   return (
     <StyledIconButton
       onPointerDown={(e) => onPointerDown(e, index)}
       {...props}
-      sx={{ cursor: 'grab' }}
+      sx={{ cursor: 'grab', color: type === 'hazard' ? colors.black : null }}
       disableRipple
       disableTouchRipple
     >
@@ -30,4 +30,5 @@ export default DragButton;
 DragButton.propTypes = {
   onPointerDown: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
+  type: PropTypes.oneOf(['pc', 'ally', 'hazard', 'foe']).isRequired,
 };
