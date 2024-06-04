@@ -17,7 +17,6 @@ const ListContainer = styled.div`
   display: flex;
   gap: 0.25rem;
   flex-direction: column;
-  touch-action: none;
   padding: 0.5rem 0;
   max-height: 86.1dvh;
   overflow-x: hidden;
