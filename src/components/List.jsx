@@ -20,6 +20,7 @@ const ListContainer = styled.div`
   padding: 0.5rem 0;
   max-height: 86.1dvh;
   overflow-x: hidden;
+  touch-action: ${(props) => (props.$reorder ? 'none' : null)};
 
   @media only screen and (max-width: ${breakpoints.md}) {
     max-height: 82.9dvh;
@@ -33,7 +34,7 @@ const ListContainer = styled.div`
 const List = () => {
   const { initValues, setInitValues } = useContext(InitiativeContext);
   const { setNoActions } = useContext(DragContext);
-  const { participants } = initValues;
+  const { participants, reorder } = initValues;
   const [isDragging, setDragging] = useState();
 
   const containerRef = useRef();
@@ -164,7 +165,7 @@ const List = () => {
 
   return (
     <Flex>
-      <ListContainer ref={containerRef}>
+      <ListContainer ref={containerRef} $reorder={reorder}>
         {participants.map((part, index) => {
           const { name, type, initiative, conditions, status } = part;
           return (

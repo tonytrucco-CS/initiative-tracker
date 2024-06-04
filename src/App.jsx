@@ -10,12 +10,12 @@ import Empty from './components/Empty';
 import { CssBaseline, Drawer, Paper, ThemeProvider } from '@mui/material';
 import ActionBar from './components/ActionBar';
 import { darkTheme } from './styles/Theme';
-import { colors } from './utils/variables';
 
 const INIT = {
   active: undefined,
   round: undefined,
   participants: [],
+  reorder: false,
 };
 
 const Main = styled.main`
