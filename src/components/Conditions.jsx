@@ -110,7 +110,7 @@ const Conditions = ({ conditions, index, type }) => {
   };
 
   return (
-    <Stack ml={'100px'} pb={0.5} gap={1} direction={'row'}>
+    <Stack ml={0.5} pb={0.5} gap={1} direction={'row'}>
       <Tooltip
         title={round === undefined ? '' : 'Add Condition'}
         enterDelay={750}

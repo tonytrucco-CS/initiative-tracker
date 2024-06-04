@@ -4,9 +4,12 @@ import { useContext } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import {
   Button,
+  FormControlLabel,
+  FormGroup,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
+  Switch,
 } from '@mui/material';
 import {
   Colorize,
@@ -29,6 +32,7 @@ const Left = styled.div`
   height: 40px;
   display: flex;
   align-items: flex-end;
+  gap: 2em;
 `;
 
 const StyledSpeedDial = styled(SpeedDial)``;
@@ -42,7 +46,7 @@ const Right = styled.div`
 
 const ActionBar = () => {
   const { initValues, setInitValues } = useContext(InitiativeContext);
-  const { round, participants } = initValues;
+  const { round, participants, reorder } = initValues;
 
   const TEMPLATE = {
     name: 'UNKNOWN',
@@ -145,6 +149,17 @@ const ActionBar = () => {
     });
   };
 
+  // enable re-order
+  const handleToggle = () => {
+    setInitValues((prevInit) => {
+      const prevToggle = prevInit.reorder;
+      return {
+        ...prevInit,
+        reorder: !prevToggle,
+      };
+    });
+  };
+
   return (
     <Nav>
       <Left>
@@ -165,6 +180,12 @@ const ActionBar = () => {
             />
           ))}
         </StyledSpeedDial>
+        <FormGroup>
+          <FormControlLabel
+            control={<Switch value={reorder} onClick={handleToggle} />}
+            label="Enable Re-Ordering"
+          />
+        </FormGroup>
       </Left>
       <Right>
         {participants.length > 0 && round === undefined && (

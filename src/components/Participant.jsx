@@ -160,7 +160,7 @@ const Participant = ({
   botRef,
 }) => {
   const { initValues, setInitValues } = useContext(InitiativeContext);
-  const { active, round, participants } = initValues;
+  const { active, round, participants, reorder } = initValues;
   const currentPart = participants[index];
   const { isDragging } = useContext(DragContext);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -290,22 +290,24 @@ const Participant = ({
           pt={0.5}
           px={0.5}
         >
-          <Actions
-            ref={
-              index === 0
-                ? topRef
-                : index === participants.length - 1
-                ? botRef
-                : null
-            }
-          >
-            <DragButton
-              onPointerDown={startDrag}
-              index={index}
-              type={type}
-              tabIndex={-1}
-            />
-          </Actions>
+          {reorder && (
+            <Actions
+              ref={
+                index === 0
+                  ? topRef
+                  : index === participants.length - 1
+                  ? botRef
+                  : null
+              }
+            >
+              <DragButton
+                onPointerDown={startDrag}
+                index={index}
+                type={type}
+                tabIndex={-1}
+              />
+            </Actions>
+          )}
           <NameAndType>
             <TypeIcon type={type} />
             <Input
@@ -369,11 +371,13 @@ const Participant = ({
           </Menu>
         </Stack>
         <Divider flexItem />
-        <Conditions
-          conditions={currentPart.conditions}
-          index={index}
-          type={type}
-        />
+        {!reorder && (
+          <Conditions
+            conditions={currentPart.conditions}
+            index={index}
+            type={type}
+          />
+        )}
       </Stack>
     </Div>
   );
