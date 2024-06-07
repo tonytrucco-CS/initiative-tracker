@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { addTouchClass } from './utils/helpers';
 import Notes from './components/Notes';
 import Empty from './components/Empty';
-import { CssBaseline, Drawer, Paper, ThemeProvider } from '@mui/material';
+import { CssBaseline, Drawer, ThemeProvider } from '@mui/material';
 import ActionBar from './components/ActionBar';
 import { darkTheme } from './styles/Theme';
 
@@ -19,8 +19,9 @@ const INIT = {
 };
 
 const Main = styled.main`
-  margin: 0 1rem 1rem;
+  margin: 0 0.5rem 0.5rem;
   flex: 1;
+  overflow: hidden;
 `;
 
 const Hidden = styled.span`
@@ -50,19 +51,10 @@ function App() {
         <CssBaseline />
         <Header toggleDrawer={toggleDrawer} />
         <Main>
-          <Paper
-            sx={{
-              display: 'grid',
-              gridTemplateRows: '1fr 56px',
-              position: 'relative',
-              height: '100%',
-            }}
-          >
-            <Initiative>
-              {initValues.participants.length > 0 ? <List /> : <Empty />}
-            </Initiative>
-            <ActionBar />
-          </Paper>
+          <Initiative>
+            {initValues.participants.length > 0 ? <List /> : <Empty />}
+          </Initiative>
+          <ActionBar />
         </Main>
         <Drawer
           keepMounted

@@ -11,7 +11,6 @@ const Div = styled.div`
   gap: 0.5rem;
   justify-content: space-between;
   height: 100%;
-  border-bottom: solid 1px ${({ theme }) => theme.palette.grey[800]};
 `;
 
 const Assigned = styled.div`

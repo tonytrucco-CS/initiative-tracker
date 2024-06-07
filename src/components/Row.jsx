@@ -13,7 +13,7 @@ const Flex = styled.div`
   grid-template-columns: ${(props) =>
     props.$round !== undefined ? '2em 1fr' : '1fr'};
   grid-column-gap: 0.25rem;
-  padding: 0 0.5rem;
+  padding: 0;
   align-items: center;
   ${(props) => {
     if (props.$dragging === props.$index) {

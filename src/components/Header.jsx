@@ -3,7 +3,7 @@ import { colors, fonts } from '../utils/variables';
 import { useContext, useEffect, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import PropTypes from 'prop-types';
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton, Tooltip, useTheme } from '@mui/material';
 import {
   ArrowLeft,
   ArrowRight,
@@ -18,6 +18,7 @@ const StyledHeader = styled.header`
   align-items: center;
   gap: 4rem;
   width: 100%;
+  border-bottom: solid 1px ${(props) => props.theme.palette.divider};
 `;
 
 const ActionContainer = styled.div`
@@ -103,6 +104,7 @@ const H2 = styled.h2`
 const Header = ({ toggleDrawer }) => {
   const { initValues, setInitValues } = useContext(InitiativeContext);
   const { round, active, participants } = initValues;
+  const theme = useTheme();
   const [activeParticipant, setActive] = useState(
     participants.filter((_, index) => index === active)[0],
   );
@@ -159,7 +161,7 @@ const Header = ({ toggleDrawer }) => {
   };
 
   return (
-    <StyledHeader>
+    <StyledHeader theme={theme}>
       <ActionContainer>
         {round !== undefined ? (
           <>

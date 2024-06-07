@@ -7,6 +7,7 @@ import {
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
+  useTheme,
 } from '@mui/material';
 import {
   Colorize,
@@ -19,10 +20,16 @@ import {
 import _ from 'lodash';
 
 const Nav = styled.nav`
-  padding: 0 0.5rem 0.5rem;
+  padding: 0.5rem;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 500;
+  border-top: solid 1px ${(props) => props.theme.palette.divider};
 `;
 
 const Left = styled.div`
@@ -32,7 +39,9 @@ const Left = styled.div`
   gap: 2em;
 `;
 
-const StyledSpeedDial = styled(SpeedDial)``;
+const StyledSpeedDial = styled(SpeedDial)`
+  width: 40px;
+`;
 
 const Right = styled.div`
   height: 40px;
@@ -44,6 +53,7 @@ const Right = styled.div`
 const ActionBar = () => {
   const { initValues, setInitValues } = useContext(InitiativeContext);
   const { round, participants, reorder } = initValues;
+  const theme = useTheme();
 
   const TEMPLATE = {
     name: 'UNKNOWN',
@@ -147,7 +157,7 @@ const ActionBar = () => {
   };
 
   return (
-    <Nav>
+    <Nav theme={theme}>
       <Left>
         <StyledSpeedDial
           ariaLabel="Add a Participant"

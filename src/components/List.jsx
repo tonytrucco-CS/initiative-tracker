@@ -5,7 +5,6 @@ import { useContext, useRef, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import DragContext from '../context/DragContext';
 import _ from 'lodash';
-import { breakpoints } from '../utils/variables';
 import { FormControlLabel, FormGroup, Stack, Switch } from '@mui/material';
 
 const Flex = styled.div`
@@ -20,17 +19,9 @@ const ListContainer = styled.div`
   gap: 0.25rem;
   flex-direction: column;
   padding: 0;
-  max-height: calc(100dvh - 171px);
+  max-height: calc(100dvh - 157px);
   overflow-x: hidden;
   touch-action: ${(props) => (props.$reorder ? 'none' : null)};
-
-  @media only screen and (max-width: ${breakpoints.md}) {
-    max-height: 82.9dvh;
-  }
-
-  @media only screen and (max-width: ${breakpoints.sm}) and (orientation: portrait) {
-    max-height: 87.1dvh;
-  }
 `;
 
 const List = () => {
@@ -179,7 +170,7 @@ const List = () => {
   return (
     <Flex>
       {participants.length !== 0 && (
-        <Stack width={'100%'} alignItems={'flex-end'} px={1}>
+        <Stack width={'100%'} alignItems={'flex-end'} pr={0.5}>
           <FormGroup sx={{ width: 'fit-content' }}>
             <FormControlLabel
               control={<Switch value={reorder} onClick={handleToggle} />}
