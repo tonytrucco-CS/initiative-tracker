@@ -22,11 +22,6 @@ export const globalCSS = css`
     box-sizing: border-box;
   }
 
-  hr {
-    border-top: solid 1px ${colors.gray600};
-    margin: 2rem 0;
-  }
-
   a {
     &:hover {
       cursor: pointer;
