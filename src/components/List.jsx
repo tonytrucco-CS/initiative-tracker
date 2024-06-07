@@ -183,7 +183,7 @@ const List = () => {
           <FormGroup sx={{ width: 'fit-content' }}>
             <FormControlLabel
               control={<Switch value={reorder} onClick={handleToggle} />}
-              label="Enable Re-Ordering"
+              label="Enable Reordering"
               labelPlacement="start"
             />
           </FormGroup>
