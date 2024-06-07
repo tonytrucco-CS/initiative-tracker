@@ -6,7 +6,6 @@ import { transparentize } from 'polished';
 import DragButton from './DragButton';
 import { useContext, useEffect, useRef, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
-import DragContext from '../context/DragContext';
 import {
   Divider,
   IconButton,
@@ -28,7 +27,7 @@ const Div = styled.div`
   border-radius: 0.25rem;
   cursor: default;
   box-shadow: 4px 4px 0.5rem ${transparentize(0.5, colors.black)};
-  touch-action: ${(props) => (props.$dragging ? 'none' : null)};
+  touch-action: ${(props) => (props.$reorder ? 'none' : null)};
   ${(props) => {
     switch (props.type) {
       case 'pc':
@@ -162,7 +161,6 @@ const Participant = ({
   const { initValues, setInitValues } = useContext(InitiativeContext);
   const { active, round, participants, reorder } = initValues;
   const currentPart = participants[index];
-  const { isDragging } = useContext(DragContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -280,14 +278,13 @@ const Participant = ({
   }, []);
 
   return (
-    <Div type={type} $dragging={isDragging} ref={partRef}>
-      <Stack alignItems={'flex-start'} width={'100%'} gap={0.75}>
+    <Div type={type} $reorder={reorder} ref={partRef}>
+      <Stack alignItems={'flex-start'} width={'100%'} gap={0.75} py={0.5}>
         <Stack
           direction={'row'}
           alignItems={'center'}
           justifyContent={'space-between'}
           width={'100%'}
-          pt={0.5}
           px={0.5}
         >
           {reorder && (
@@ -370,13 +367,15 @@ const Participant = ({
             </MenuItem>
           </Menu>
         </Stack>
-        <Divider flexItem />
-        {!reorder && (
-          <Conditions
-            conditions={currentPart.conditions}
-            index={index}
-            type={type}
-          />
+        {!reorder && round !== undefined && (
+          <>
+            <Divider flexItem />
+            <Conditions
+              conditions={currentPart.conditions}
+              index={index}
+              type={type}
+            />
+          </>
         )}
       </Stack>
     </Div>

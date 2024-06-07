@@ -4,12 +4,9 @@ import { useContext } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import {
   Button,
-  FormControlLabel,
-  FormGroup,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
-  Switch,
 } from '@mui/material';
 import {
   Colorize,
@@ -149,17 +146,6 @@ const ActionBar = () => {
     });
   };
 
-  // enable re-order
-  const handleToggle = () => {
-    setInitValues((prevInit) => {
-      const prevToggle = prevInit.reorder;
-      return {
-        ...prevInit,
-        reorder: !prevToggle,
-      };
-    });
-  };
-
   return (
     <Nav>
       <Left>
@@ -180,12 +166,6 @@ const ActionBar = () => {
             />
           ))}
         </StyledSpeedDial>
-        <FormGroup>
-          <FormControlLabel
-            control={<Switch value={reorder} onClick={handleToggle} />}
-            label="Enable Re-Ordering"
-          />
-        </FormGroup>
       </Left>
       <Right>
         {participants.length > 0 && round === undefined && (
@@ -193,6 +173,7 @@ const ActionBar = () => {
             variant="contained"
             onClick={handleStart}
             endIcon={<PlayCircleOutline />}
+            disabled={reorder}
           >
             Fight!
           </Button>
@@ -202,6 +183,7 @@ const ActionBar = () => {
             variant="contained"
             onClick={handleEnd}
             endIcon={<StopCircleOutlined />}
+            disabled={reorder}
           >
             End Encounter
           </Button>

@@ -6,19 +6,21 @@ import InitiativeContext from '../context/InitiativeContext';
 import DragContext from '../context/DragContext';
 import _ from 'lodash';
 import { breakpoints } from '../utils/variables';
+import { FormControlLabel, FormGroup, Stack, Switch } from '@mui/material';
 
 const Flex = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  gap: 0.25rem;
 `;
 
 const ListContainer = styled.div`
   display: flex;
   gap: 0.25rem;
   flex-direction: column;
-  padding: 0.5rem 0;
-  max-height: 86.1dvh;
+  padding: 0;
+  max-height: calc(100dvh - 171px);
   overflow-x: hidden;
   touch-action: ${(props) => (props.$reorder ? 'none' : null)};
 
@@ -163,8 +165,30 @@ const List = () => {
     return button === 1;
   };
 
+  // enable re-order
+  const handleToggle = () => {
+    setInitValues((prevInit) => {
+      const prevToggle = prevInit.reorder;
+      return {
+        ...prevInit,
+        reorder: !prevToggle,
+      };
+    });
+  };
+
   return (
     <Flex>
+      {participants.length !== 0 && (
+        <Stack width={'100%'} alignItems={'flex-end'} px={1}>
+          <FormGroup sx={{ width: 'fit-content' }}>
+            <FormControlLabel
+              control={<Switch value={reorder} onClick={handleToggle} />}
+              label="Enable Reordering"
+              labelPlacement="start"
+            />
+          </FormGroup>
+        </Stack>
+      )}
       <ListContainer ref={containerRef} $reorder={reorder}>
         {participants.map((part, index) => {
           const { name, type, initiative, conditions, status } = part;
