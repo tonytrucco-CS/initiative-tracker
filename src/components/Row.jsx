@@ -10,9 +10,10 @@ import { ArrowRight } from '@mui/icons-material';
 
 const Flex = styled.div`
   display: grid;
-  grid-template-columns: 2em 1fr;
-  grid-gap: 0.25rem;
-  padding: 0 1rem 0 0.5rem;
+  grid-template-columns: ${(props) =>
+    props.$round !== undefined ? '2em 1fr' : '1fr'};
+  grid-column-gap: 0.25rem;
+  padding: 0 0.5rem;
   align-items: center;
   ${(props) => {
     if (props.$dragging === props.$index) {
@@ -47,7 +48,7 @@ const Div = styled.div`
 
 const Row = React.forwardRef(({ children, dragging, index }, ref) => {
   const { initValues } = useContext(InitiativeContext);
-  const { active } = initValues;
+  const { active, round } = initValues;
 
   const viewRef = useRef();
 
@@ -62,7 +63,7 @@ const Row = React.forwardRef(({ children, dragging, index }, ref) => {
   }, [active, index]);
 
   return (
-    <Flex $dragging={dragging} $index={index} ref={ref}>
+    <Flex $dragging={dragging} $index={index} $round={round} ref={ref}>
       <Stack alignItems={'center'}>
         <Active>{active === index && <ArrowRight fontSize="large" />}</Active>
       </Stack>

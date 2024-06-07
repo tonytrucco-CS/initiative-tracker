@@ -38,10 +38,13 @@ const Flex = styled.div`
 
 const H1 = styled.h1`
   padding: 0;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   margin: 0;
   display: flex;
   align-items: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
   gap: 0.5rem;
   border-radius: 0.25rem;
   user-select: none;
@@ -86,9 +89,11 @@ const Img = styled.img`
 
 const H2 = styled.h2`
   color: ${colors.theme.light_gray};
-  padding: 0;
+  border-radius: 0.25rem;
+  padding: 0 0.5rem;
   margin: 0;
   user-select: none;
+  background-color: ${colors.gray200};
 
   span {
     font-family: ${fonts.mono};
