@@ -261,11 +261,13 @@ const Participant = ({
         ),
       }));
     } else {
+      const lastIsActive = active === participants.length - 1;
       setInitValues((prevInit) => ({
         ...prevInit,
         participants: prevInit.participants.filter(
           (_, index) => index !== toRemove,
         ),
+        active: lastIsActive ? participants.length - 2 : prevInit.active,
       }));
     }
   };
