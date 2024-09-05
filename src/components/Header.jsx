@@ -196,7 +196,7 @@ const Header = ({ toggleDrawer }) => {
           </>
         ) : (
           <H1>
-            <Img src="/logo.png" />
+            <Img src="/logo.png" alt="" />
             Pathfinder 2e Initiative Tracker
           </H1>
         )}
