@@ -29,7 +29,7 @@ const Empty = () => {
   return (
     <Div>
       <Title>Don&apos;t you have anything to fight?</Title>
-      <SubTitle>Add something from the list below</SubTitle>
+      <SubTitle>Use the button below to add something from the list</SubTitle>
     </Div>
   );
 };
