@@ -1,6 +1,7 @@
 {
   "short_name": "Initiative Tracker",
   "name": "Pathfinder 2e Initiative Tracker",
+  "orientation": "any",
   "icons": [
     {
       "src": "logo.png",
@@ -11,5 +12,19 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#101214",
-  "background_color": "#101214"
+  "background_color": "#101214",
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot-tablet.png",
+      "sizes": "1024x768",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshots/screenshot-wide.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
 }
