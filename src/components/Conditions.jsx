@@ -19,6 +19,7 @@ const BAD_CONS = [
   'slowed',
   'stunned',
   'grabbed',
+  'pinned',
   'wounded',
   'doomed',
   'clumsy',
@@ -29,9 +30,11 @@ const BAD_CONS = [
   'dazzled',
   'deafened',
   'confused',
+  'silenced',
   'controlled',
   'fascinated',
   'fatigued',
+  'off-guard',
   'fleeing',
   'frightened',
   'persistent damage',
@@ -43,7 +46,7 @@ const BAD_CONS = [
 ];
 
 const GOOD_CONS = [
-  'quickened',
+  'hastened',
   'invisible',
   'hidden',
   'concealed',
