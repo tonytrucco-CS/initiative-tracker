@@ -1,22 +1,14 @@
 import styled from 'styled-components';
 import Header from './components/Header';
-import List from './components/List';
 import Initiative from './components/Initiative';
 import InitiativeContext from './context/InitiativeContext';
 import { useEffect, useState } from 'react';
 import { addTouchClass } from './utils/helpers';
 import Notes from './components/Notes';
-import Empty from './components/Empty';
 import { CssBaseline, Drawer, ThemeProvider } from '@mui/material';
 import ActionBar from './components/ActionBar';
 import { darkTheme } from './styles/Theme';
-
-const INIT = {
-  active: undefined,
-  round: undefined,
-  participants: [],
-  reorder: false,
-};
+import { INITIAL_VALUES } from './utils/constants';
 
 const Main = styled.main`
   margin: 0 0.5rem 0.5rem;
@@ -34,7 +26,7 @@ const Hidden = styled.span`
 `;
 
 function App() {
-  const [initValues, setInitValues] = useState(INIT);
+  const [initValues, setInitValues] = useState(INITIAL_VALUES);
   const [open, setOpen] = useState(false);
 
   const toggleDrawer = (newOpen) => {
@@ -51,9 +43,7 @@ function App() {
         <CssBaseline />
         <Header toggleDrawer={toggleDrawer} />
         <Main>
-          <Initiative>
-            {initValues.participants.length > 0 ? <List /> : <Empty />}
-          </Initiative>
+          <Initiative />
           <ActionBar />
         </Main>
         <Drawer

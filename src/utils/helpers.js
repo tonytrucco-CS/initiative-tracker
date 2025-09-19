@@ -50,3 +50,31 @@ export function useIsVisible(ref) {
 
   return isIntersecting;
 }
+
+export function isLast(participants, id) {
+  if (participants.length === 0) return false;
+  const last = participants.at(-1);
+  return last.id === id;
+}
+
+// access the id of the neighbor to the active player
+export function neighborId(
+  participants,
+  active,
+  dir = +1,
+  { wrap = true } = {},
+) {
+  const n = participants.length;
+  if (!n) return undefined;
+
+  const i = participants.findIndex((p) => p.id === active);
+  if (i === -1) return participants[dir > 0 ? 0 : n - 1]?.id;
+
+  let j = i + dir;
+  if (wrap) {
+    j = (j + n) % n;
+  } else if (j < 0 || j >= n) {
+    return undefined;
+  }
+  return participants[j]?.id;
+}

@@ -46,7 +46,7 @@ const Div = styled.div`
   align-items: center;
 `;
 
-const Row = React.forwardRef(({ children, dragging, index }, ref) => {
+const Row = React.forwardRef(({ children, dragging, index, id }, ref) => {
   const { initValues } = useContext(InitiativeContext);
   const { active, round } = initValues;
 
@@ -65,9 +65,9 @@ const Row = React.forwardRef(({ children, dragging, index }, ref) => {
   return (
     <Flex $dragging={dragging} $index={index} $round={round} ref={ref}>
       <Stack alignItems={'center'}>
-        <Active>{active === index && <ArrowRight fontSize="large" />}</Active>
+        <Active>{active === id && <ArrowRight fontSize="large" />}</Active>
       </Stack>
-      <Div ref={active === index ? viewRef : null}>{children}</Div>
+      <Div ref={active === id ? viewRef : null}>{children}</Div>
     </Flex>
   );
 });
@@ -76,9 +76,7 @@ export default Row;
 
 Row.propTypes = {
   children: PropTypes.node.isRequired,
-  status: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
   dragging: PropTypes.number,
   index: PropTypes.number.isRequired,
-  type: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
 };

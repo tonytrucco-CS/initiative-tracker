@@ -18,6 +18,8 @@ import {
   StopCircleOutlined,
 } from '@mui/icons-material';
 import _ from 'lodash';
+import { PART_TEMPLATE } from '../utils/constants';
+import { saveParty } from '../utils/storage';
 
 const Nav = styled.nav`
   padding: 0.5rem;
@@ -55,14 +57,6 @@ const ActionBar = () => {
   const { round, participants, reorder } = initValues;
   const theme = useTheme();
 
-  const TEMPLATE = {
-    name: 'UNKNOWN',
-    type: '',
-    initiative: 0,
-    status: 'alive',
-    conditions: [],
-  };
-
   const types = [
     {
       icon: <Person sx={{ color: colors.theme.blue }} />,
@@ -95,6 +89,7 @@ const ActionBar = () => {
   // add a specific type of participant
   const addParticipant = (type) => {
     let name = '';
+    let id = crypto.randomUUID();
     switch (type) {
       case 'pc':
         name = 'PLAYER CHARACTER';
@@ -111,7 +106,7 @@ const ActionBar = () => {
         break;
     }
     name += ` ${countType(type)}`;
-    const Participant = { ...TEMPLATE, type: type, name: name };
+    const Participant = { ...PART_TEMPLATE, type: type, name: name, id: id };
     let newUnassigned = [...initValues.participants];
     newUnassigned.push(Participant);
     setInitValues({
@@ -122,6 +117,7 @@ const ActionBar = () => {
 
   // start a combat
   const handleStart = () => {
+    saveParty(initValues.participants);
     setInitValues((prevInit) => {
       // sort participants by initiative value
       const updatedParticipants = [...prevInit.participants];
@@ -134,7 +130,7 @@ const ActionBar = () => {
         ...prevInit,
         participants: sortedParticipants,
         round: 1,
-        active: 0,
+        active: sortedParticipants[0].id,
       };
     });
   };
