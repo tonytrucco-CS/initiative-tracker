@@ -20,6 +20,7 @@ import Conditions from './Conditions';
 import ActionIcon from './ActionIcon';
 import DyingAction from './DyingAction';
 import _ from 'lodash';
+import { isLast } from '../utils/helpers';
 
 const Div = styled.div`
   flex: 1;
@@ -147,20 +148,10 @@ const Actions = styled.div`
   align-items: center;
 `;
 
-const Participant = ({
-  name,
-  type = 'pc',
-  initiative,
-  conditions = [],
-  status = 'alive',
-  index,
-  startDrag,
-  topRef,
-  botRef,
-}) => {
+const Participant = ({ id, index, startDrag, topRef, botRef }) => {
   const { initValues, setInitValues } = useContext(InitiativeContext);
   const { active, round, participants, reorder } = initValues;
-  const currentPart = participants[index];
+  const currentPart = participants.find((p) => p.id === id);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -236,8 +227,7 @@ const Participant = ({
   };
 
   // remove a participant
-  const handleRemove = () => {
-    const toRemove = index;
+  const handleRemove = (id) => {
     if (participants.length === 1) {
       // basically we reset the app if all participants are removed
       setInitValues({
@@ -248,26 +238,20 @@ const Participant = ({
       return;
     }
     // if it's the last participant in the array being removed
-    if (participants.length - 1 === index) {
+    if (isLast(participants, id)) {
       setInitValues((prevInit) => ({
         ...prevInit,
-        active: index === active ? 0 : prevInit.active,
+        active: id === active ? participants[0].id : prevInit.active,
         round:
-          index === active && round !== undefined
+          id === active && round !== undefined
             ? prevInit.round + 1
             : prevInit.round,
-        participants: prevInit.participants.filter(
-          (_, index) => index !== toRemove,
-        ),
+        participants: prevInit.participants.filter((p) => p.id !== id),
       }));
     } else {
-      const lastIsActive = active === participants.length - 1;
       setInitValues((prevInit) => ({
         ...prevInit,
-        participants: prevInit.participants.filter(
-          (_, index) => index !== toRemove,
-        ),
-        active: lastIsActive ? participants.length - 2 : prevInit.active,
+        participants: prevInit.participants.filter((p) => p.id !== id),
       }));
     }
   };
@@ -278,6 +262,8 @@ const Participant = ({
       behavior: 'smooth',
     });
   }, []);
+
+  const { type, status, initiative, conditions, name } = currentPart;
 
   return (
     <Div type={type} $reorder={reorder} ref={partRef}>
@@ -361,7 +347,7 @@ const Participant = ({
               <ListItemText>Ready Action</ListItemText>
             </MenuItem>
             <Divider />
-            <MenuItem onClick={handleRemove}>
+            <MenuItem onClick={() => handleRemove(id)}>
               <ListItemIcon>
                 <Delete />
               </ListItemIcon>
@@ -387,11 +373,7 @@ const Participant = ({
 export default Participant;
 
 Participant.propTypes = {
-  name: PropTypes.string.isRequired,
-  type: PropTypes.oneOf(['pc', 'ally', 'foe', 'hazard']).isRequired,
-  initiative: PropTypes.number.isRequired,
-  status: PropTypes.oneOf(['alive', 'dying1', 'dying2', 'dying3']),
-  conditions: PropTypes.array.isRequired,
+  id: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
   startDrag: PropTypes.func.isRequired,
   topRef: PropTypes.shape({

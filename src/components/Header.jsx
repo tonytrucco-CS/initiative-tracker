@@ -9,6 +9,7 @@ import {
   ArrowRight,
   DescriptionOutlined,
 } from '@mui/icons-material';
+import { neighborId } from '../utils/helpers';
 
 const StyledHeader = styled.header`
   margin: 0;
@@ -105,12 +106,10 @@ const Header = ({ toggleDrawer }) => {
   const { initValues, setInitValues } = useContext(InitiativeContext);
   const { round, active, participants } = initValues;
   const theme = useTheme();
-  const [activeParticipant, setActive] = useState(
-    participants.filter((_, index) => index === active)[0],
-  );
+  const [activeParticipant, setActive] = useState(participants[0]?.id);
 
   useEffect(() => {
-    setActive(participants.filter((_, index) => index === active)[0]);
+    setActive(participants.find((p) => p.id === active));
   }, [active, participants]);
 
   // move to the previous round
@@ -131,15 +130,16 @@ const Header = ({ toggleDrawer }) => {
 
   // move to the next participant and possibly next round
   const nextTurn = () => {
-    if (active !== participants.length - 1) {
+    // if it's not the last person
+    if (active !== participants[participants.length - 1].id) {
       setInitValues((prevInit) => ({
         ...prevInit,
-        active: prevInit.active + 1,
+        active: neighborId(prevInit.participants, active),
       }));
     } else {
       setInitValues((prevInit) => ({
         ...prevInit,
-        active: 0,
+        active: neighborId(prevInit.participants, active),
         round: prevInit.round + 1,
       }));
     }
@@ -147,15 +147,16 @@ const Header = ({ toggleDrawer }) => {
 
   // move to previous participant
   const prevTurn = () => {
+    // if it's the first person
     if (active === 0) {
       setInitValues((prevInit) => ({
         ...prevInit,
-        active: prevInit.participants.length - 1,
+        active: neighborId(prevInit.participants, active, -1),
       }));
     } else {
       setInitValues((prevInit) => ({
         ...prevInit,
-        active: prevInit.active - 1,
+        active: neighborId(prevInit.participants, active, -1),
       }));
     }
   };

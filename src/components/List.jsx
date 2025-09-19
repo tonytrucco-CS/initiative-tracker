@@ -4,7 +4,6 @@ import Row from './Row';
 import { useContext, useRef, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import DragContext from '../context/DragContext';
-import _ from 'lodash';
 import { FormControlLabel, FormGroup, Stack, Switch } from '@mui/material';
 
 const Flex = styled.div`
@@ -49,6 +48,7 @@ const List = () => {
     const dragItem = items[index];
     const itemsBelowDragItem = items.slice(index + 1);
     const notDragItems = items.filter((_, i) => i !== index);
+    const dragId = participants[index].id;
     let dragData = participants[index];
     let newParticipants = participants;
 
@@ -86,12 +86,15 @@ const List = () => {
           }
 
           // swap data
-          newParticipants = participants.filter(
-            (item) => item.name !== dragData.name,
-          );
-          _.remove(dragData.conditions, (con) => con === 'delay');
-          _.remove(dragData.conditions, (con) => con === 'ready');
-          newParticipants.splice(index, 0, dragData);
+          // remove dragged item by id, sanitize conditions
+          const cleaned = {
+            ...dragData,
+            conditions: (dragData.conditions || []).filter(
+              (c) => c !== 'delay' && c !== 'ready',
+            ),
+          };
+          newParticipants = participants.filter((p) => p.id !== dragId);
+          newParticipants.splice(index, 0, cleaned);
         }
       });
     }
@@ -182,22 +185,11 @@ const List = () => {
       )}
       <ListContainer ref={containerRef} $reorder={reorder}>
         {participants.map((part, index) => {
-          const { name, type, initiative, conditions, status } = part;
+          const { id } = part;
           return (
-            <Row
-              key={index}
-              status={status}
-              name={name}
-              dragging={isDragging}
-              type={type}
-              index={index}
-            >
+            <Row key={id} dragging={isDragging} index={index} id={id}>
               <Participant
-                name={name}
-                type={type}
-                initiative={initiative}
-                conditions={conditions}
-                status={status}
+                id={id}
                 index={index}
                 startDrag={startDrag}
                 topRef={topRef}
