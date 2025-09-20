@@ -1,65 +1,16 @@
 import { Add } from '@mui/icons-material';
-import {
-  Chip,
-  IconButton,
-  Menu,
-  MenuItem,
-  Stack,
-  Tooltip,
-} from '@mui/material';
+import { IconButton, Menu, MenuItem, Stack, Tooltip } from '@mui/material';
 import InitiativeContext from '../context/InitiativeContext';
 import { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import { colors } from '../utils/variables';
+import ConditionChip from './ConditionChip';
+import { CONDITIONS } from '../utils/constants';
+import _ from 'lodash';
 
-const ACTION_CONS = ['delay', 'ready'];
-
-const BAD_CONS = [
-  'slowed',
-  'stunned',
-  'grabbed',
-  'pinned',
-  'wounded',
-  'doomed',
-  'clumsy',
-  'drained',
-  'enfeebled',
-  'stupified',
-  'blinded',
-  'dazzled',
-  'deafened',
-  'confused',
-  'silenced',
-  'controlled',
-  'fascinated',
-  'fatigued',
-  'off-guard',
-  'fleeing',
-  'frightened',
-  'persistent damage',
-  'prone',
-  'petrified',
-  'sickened',
-  'paralyzed',
-  'restrained',
-];
-
-const GOOD_CONS = [
-  'hastened',
-  'invisible',
-  'hidden',
-  'concealed',
-  'undetected',
-  'unnoticed',
-];
-
-const MERGED = _.concat(BAD_CONS, GOOD_CONS);
-
-const Conditions = ({ conditions, index, type }) => {
+const Conditions = ({ conditions, id, type }) => {
   const { initValues, setInitValues } = useContext(InitiativeContext);
-  const { round, participants } = initValues;
-  const participant = participants[index];
+  const { round } = initValues;
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -71,45 +22,30 @@ const Conditions = ({ conditions, index, type }) => {
     setAnchorEl(null);
   };
 
+  // add a condition to the participant's array of conditions
   const addCondition = (condition) => {
-    let newConditions = [...participant.conditions];
-    newConditions.push(condition);
+    let newConditions = conditions;
+    conditions.push(condition);
 
     setInitValues((prevInit) => {
-      const updatedParticipants = [...prevInit.participants];
-      updatedParticipants[index] = {
-        ...updatedParticipants[index],
-        conditions: newConditions,
-      };
+      const updatedParticipants = prevInit.participants.map((p) =>
+        p.id === id ? { ...p, conditions: newConditions } : p,
+      );
       return { ...prevInit, participants: updatedParticipants };
     });
     handleClose();
   };
 
-  const removeCondition = (condition) => {
-    let newConditions = [...participant.conditions];
-    _.remove(newConditions, (con) => con === condition);
-
+  // remove a condition based on its ID
+  const removeCon = (conid) => {
     setInitValues((prevInit) => {
-      const updatedParticipants = [...prevInit.participants];
-      updatedParticipants[index] = {
-        ...updatedParticipants[index],
-        conditions: newConditions,
-      };
+      const updatedParticipants = prevInit.participants.map((p) =>
+        p.id === id
+          ? { ...p, conditions: p.conditions.filter((c) => c.id !== conid) }
+          : p,
+      );
       return { ...prevInit, participants: updatedParticipants };
     });
-  };
-
-  const checkConType = (condition) => {
-    if (_.includes(ACTION_CONS, condition)) {
-      return 'default';
-    }
-    if (_.includes(BAD_CONS, condition)) {
-      return 'error';
-    }
-    if (_.includes(GOOD_CONS, condition)) {
-      return 'success';
-    }
   };
 
   return (
@@ -138,15 +74,16 @@ const Conditions = ({ conditions, index, type }) => {
         direction={'row'}
         flexWrap={'wrap'}
       >
-        {conditions.map((condition) => {
-          const color = checkConType(condition);
+        {conditions.map((con) => {
           return (
-            <Chip
-              size="small"
-              color={color}
-              key={condition}
-              label={_.capitalize(condition)}
-              onDelete={() => removeCondition(condition)}
+            <ConditionChip
+              key={con.id}
+              label={con.name}
+              remove={(id) => removeCon(id)}
+              hint={con.hint}
+              value={con.value}
+              id={con.id}
+              type={con.type}
             />
           );
         })}
@@ -160,15 +97,18 @@ const Conditions = ({ conditions, index, type }) => {
           maxHeight: '30em',
         }}
       >
-        {_.sortBy(MERGED).map((con) => (
-          <MenuItem
-            key={con}
-            onClick={() => addCondition(con)}
-            disabled={_.includes(conditions, con)}
-          >
-            {_.capitalize(con)}
-          </MenuItem>
-        ))}
+        {_.sortBy(CONDITIONS, 'name').map((con) => {
+          const isDisabled = conditions.some((c) => c.name === con.name);
+          return (
+            <MenuItem
+              key={con.id}
+              onClick={() => addCondition(con)}
+              disabled={isDisabled}
+            >
+              {con.name}
+            </MenuItem>
+          );
+        })}
       </Menu>
     </Stack>
   );
@@ -179,5 +119,5 @@ export default Conditions;
 Conditions.propTypes = {
   conditions: PropTypes.array.isRequired,
   type: PropTypes.oneOf(['pc', 'ally', 'hazard', 'foe']),
-  index: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
 };
