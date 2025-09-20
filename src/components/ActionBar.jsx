@@ -88,31 +88,29 @@ const ActionBar = () => {
 
   // add a specific type of participant
   const addParticipant = (type) => {
-    let name = '';
-    let id = crypto.randomUUID();
-    switch (type) {
-      case 'pc':
-        name = 'PLAYER CHARACTER';
-        break;
-      case 'ally':
-        name = 'NPC';
-        break;
-      case 'foe':
-        name = 'MONSTER';
-        break;
+    const id = crypto.randomUUID?.();
+    const base =
+      type === 'pc'
+        ? 'PLAYER CHARACTER'
+        : type === 'ally'
+        ? 'NPC'
+        : type === 'foe'
+        ? 'MONSTER'
+        : 'HAZARD';
 
-      case 'hazard':
-        name = 'HAZARD';
-        break;
-    }
-    name += ` ${countType(type)}`;
-    const Participant = { ...PART_TEMPLATE, type: type, name: name, id: id };
-    let newUnassigned = [...initValues.participants];
-    newUnassigned.push(Participant);
-    setInitValues({
-      ...initValues,
-      participants: newUnassigned,
-    });
+    const name = `${base} ${countType(type)}`;
+
+    const participant = {
+      ...structuredClone(PART_TEMPLATE), // deep copy avoids shared refs
+      id,
+      type,
+      name,
+    };
+
+    setInitValues((prev) => ({
+      ...prev,
+      participants: [...prev.participants, participant],
+    }));
   };
 
   // start a combat
@@ -145,6 +143,7 @@ const ActionBar = () => {
         initiative: 0,
         conditions: [],
       }));
+    saveParty(onlyPCs);
     setInitValues({
       round: undefined,
       active: undefined,

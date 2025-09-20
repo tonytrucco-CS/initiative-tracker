@@ -4,23 +4,11 @@ import { colors, fonts } from '../utils/variables';
 import TypeIcon from './TypeIcon';
 import { transparentize } from 'polished';
 import DragButton from './DragButton';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
-import {
-  Divider,
-  IconButton,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Stack,
-} from '@mui/material';
-import { Delete, MoreVert } from '@mui/icons-material';
+import { Divider, IconButton, Stack, Tooltip } from '@mui/material';
 import Conditions from './Conditions';
-import ActionIcon from './ActionIcon';
-import DyingAction from './DyingAction';
-import _ from 'lodash';
-import { isLast } from '../utils/helpers';
+import { isLast, neighborId } from '../utils/helpers';
 
 const Div = styled.div`
   flex: 1;
@@ -152,18 +140,6 @@ const Participant = ({ id, index, startDrag, topRef, botRef }) => {
   const { initValues, setInitValues } = useContext(InitiativeContext);
   const { active, round, participants, reorder } = initValues;
   const currentPart = participants.find((p) => p.id === id);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-
-  // set the anchor element
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  // undo anchor element for menu
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const partRef = useRef();
 
@@ -195,37 +171,6 @@ const Participant = ({ id, index, startDrag, topRef, botRef }) => {
     e.target.select();
   };
 
-  // are we adding or removing delay/ready from the conditions list?
-  const handleActionStatus = (action) => {
-    const updatedValues = participants.map((part) => {
-      if (part.name === name) {
-        let conArray = [...part.conditions];
-        // do we need to remove the condition?
-        if (action === 'normal') {
-          _.remove(conArray, (con) => con === 'delay' || con === 'ready');
-        } else {
-          if (_.includes(conArray, action)) {
-            _.remove(conArray, (con) => con === action);
-          } else if (!_.includes(conArray, action) && action !== 'normal') {
-            conArray.push(action);
-          }
-          if (action === 'delay') {
-            _.remove(conArray, (con) => con === 'ready');
-          }
-          if (action === 'ready') {
-            _.remove(conArray, (con) => con === 'delay');
-          }
-        }
-        return { ...part, conditions: conArray };
-      }
-      return part;
-    });
-    setInitValues({
-      ...initValues,
-      participants: updatedValues,
-    });
-  };
-
   // remove a participant
   const handleRemove = (id) => {
     if (participants.length === 1) {
@@ -249,8 +194,14 @@ const Participant = ({ id, index, startDrag, topRef, botRef }) => {
         participants: prevInit.participants.filter((p) => p.id !== id),
       }));
     } else {
+      // if the participant being removed is also active
+      let newActive = active;
+      if (active === id) {
+        newActive = neighborId(participants, active);
+      }
       setInitValues((prevInit) => ({
         ...prevInit,
+        active: newActive,
         participants: prevInit.participants.filter((p) => p.id !== id),
       }));
     }
@@ -263,8 +214,7 @@ const Participant = ({ id, index, startDrag, topRef, botRef }) => {
     });
   }, []);
 
-  const { type, status, initiative, conditions, name } = currentPart;
-
+  const { type, initiative, conditions, name } = currentPart;
   return (
     <Div type={type} $reorder={reorder} ref={partRef}>
       <Stack alignItems={'flex-start'} width={'100%'} gap={0.75} py={0.5}>
@@ -313,56 +263,25 @@ const Participant = ({ id, index, startDrag, topRef, botRef }) => {
             onChange={(e) => handleInit(e)}
             onClick={handleSelect}
           />
-          <IconButton
-            onClick={handleClick}
-            tabIndex={round === undefined ? -1 : null}
-            sx={{ color: type === 'hazard' ? colors.black : null }}
-          >
-            <MoreVert />
-          </IconButton>
-          <DyingAction name={name} type={type} status={status} />
-          <Menu
-            anchorEl={anchorEl}
-            id="part-menu"
-            open={open}
-            onClose={handleClose}
-            onClick={handleClose}
-          >
-            <MenuItem
-              onClick={() => handleActionStatus('delay')}
-              disabled={round === undefined || _.includes(conditions, 'delay')}
+          <Tooltip title={`Remove ${name}`} enterDelay={300}>
+            <IconButton
+              aria-label="Remove Participant"
+              onClick={() => handleRemove(id)}
+              tabIndex={round === undefined ? -1 : null}
             >
-              <ListItemIcon>
-                <ActionIcon actions={0} />
-              </ListItemIcon>
-              <ListItemText>Delay Turn</ListItemText>
-            </MenuItem>
-            <MenuItem
-              onClick={() => handleActionStatus('ready')}
-              disabled={round === undefined || _.includes(conditions, 'ready')}
-            >
-              <ListItemIcon>
-                <ActionIcon actions={2} />
-              </ListItemIcon>
-              <ListItemText>Ready Action</ListItemText>
-            </MenuItem>
-            <Divider />
-            <MenuItem onClick={() => handleRemove(id)}>
-              <ListItemIcon>
-                <Delete />
-              </ListItemIcon>
-              <ListItemText>Remove {name}</ListItemText>
-            </MenuItem>
-          </Menu>
+              <span
+                className="material-symbols-outlined"
+                style={{ color: type === 'hazard' ? colors.black : null }}
+              >
+                skull
+              </span>
+            </IconButton>
+          </Tooltip>
         </Stack>
         {!reorder && round !== undefined && (
           <>
             <Divider flexItem />
-            <Conditions
-              conditions={currentPart.conditions}
-              index={index}
-              type={type}
-            />
+            <Conditions conditions={conditions} id={id} type={type} />
           </>
         )}
       </Stack>
