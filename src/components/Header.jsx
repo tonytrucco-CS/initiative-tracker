@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { colors, fonts } from '../utils/variables';
+import { breakpoints, colors, fonts } from '../utils/variables';
 import { useContext, useEffect, useState } from 'react';
 import InitiativeContext from '../context/InitiativeContext';
 import PropTypes from 'prop-types';
@@ -17,17 +17,25 @@ const StyledHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 4rem;
+  gap: 4em;
   width: 100%;
   border-bottom: solid 1px ${(props) => props.theme.palette.divider};
+
+  @media only screen and (max-width: ${breakpoints.md}) {
+    gap: 1em;
+  }
 `;
 
 const ActionContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 2rem;
+  gap: 2em;
   flex: 1;
+
+  @media only screen and (max-width: ${breakpoints.md}) {
+    gap: 1em;
+  }
 `;
 
 const NoteAction = styled.div``;
@@ -35,7 +43,11 @@ const NoteAction = styled.div``;
 const Flex = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.5em;
+
+  @media only screen and (max-width: ${breakpoints.md}) {
+    gap: 0.25em;
+  }
 `;
 
 const H1 = styled.h1`
@@ -82,11 +94,19 @@ const H1 = styled.h1`
         `;
     }
   }}
+  @media only screen and (max-width: ${breakpoints.md}) {
+    font-size: 1rem;
+  }
 `;
 
 const Img = styled.img`
   width: 2rem;
   height: 2rem;
+
+  @media only screen and (max-width: ${breakpoints.md}) {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
 `;
 
 const H2 = styled.h2`
@@ -96,9 +116,14 @@ const H2 = styled.h2`
   margin: 0;
   user-select: none;
   background-color: ${colors.gray200};
+  white-space: nowrap;
 
   span {
     font-family: ${fonts.mono};
+  }
+
+  @media only screen and (max-width: ${breakpoints.md}) {
+    font-size: 1rem;
   }
 `;
 
@@ -171,18 +196,19 @@ const Header = ({ toggleDrawer }) => {
                 onClick={handlePrev}
                 disabled={round === 1}
                 aria-label="Previous"
+                size="small"
               >
                 <ArrowLeft />
               </IconButton>
               <H2>
                 Round <span>{round}</span>
               </H2>
-              <IconButton onClick={handleNext} aria-label="Next">
+              <IconButton onClick={handleNext} aria-label="Next" size="small">
                 <ArrowRight />
               </IconButton>
             </Flex>
             <Flex>
-              <IconButton onClick={prevTurn} aria-label="Previous">
+              <IconButton onClick={prevTurn} aria-label="Previous" size="small">
                 <ArrowLeft />
               </IconButton>
               {activeParticipant ? (
@@ -190,7 +216,7 @@ const Header = ({ toggleDrawer }) => {
               ) : (
                 <H1>Selecting...</H1>
               )}
-              <IconButton onClick={nextTurn} aria-label="Next">
+              <IconButton onClick={nextTurn} aria-label="Next" size="small">
                 <ArrowRight />
               </IconButton>
             </Flex>
