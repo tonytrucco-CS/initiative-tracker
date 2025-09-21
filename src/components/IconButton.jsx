@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { transparentize } from 'polished';
-import { colors } from '../utils/variables';
+import { breakpoints, colors } from '../utils/variables';
 
 const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 2rem;
-  width: 2rem;
+  height: 2em;
+  width: 2em;
   border-radius: 50%;
   border: none;
   background-color: ${transparentize(0.75, colors.black)};
@@ -35,6 +35,11 @@ const Button = styled.button`
   &:disabled {
     pointer-events: none;
     opacity: 0.5;
+  }
+
+  @media only screen and (max-width: ${breakpoints.md}) {
+    height: 1em;
+    width: 1em;
   }
 `;
 

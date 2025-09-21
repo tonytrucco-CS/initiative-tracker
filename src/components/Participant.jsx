@@ -64,6 +64,7 @@ const Input = styled.input`
   font-family: ${fonts.body};
   font-size: 1rem;
   flex: 1;
+  width: 100%;
   padding-left: 0.5rem;
 
   &:focus {

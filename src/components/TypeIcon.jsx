@@ -14,6 +14,8 @@ const Span = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 2.5rem;
+  width: 2.5rem;
   ${(props) => {
     switch (props.type) {
       case 'pc':
