@@ -66,10 +66,19 @@ const Input = styled.input`
   flex: 1;
   width: 100%;
   padding-left: 0.5rem;
+  &::selection {
+    color: ${(props) =>
+      props.$type === 'hazard' ? colors.black : colors.white};
+    background: ${transparentize(0.8, colors.black)};
+  }
 
   &:focus {
+    -webkit-text-fill-color: ${(props) =>
+      props.$type === 'hazard' ? colors.black : colors.white};
+    caret-color: ${(props) =>
+      props.$type === 'hazard' ? colors.black : colors.white};
     outline: none;
-    background-color: ${transparentize(0.75, colors.black)};
+    background-color: ${transparentize(0.8, colors.black)};
   }
 `;
 

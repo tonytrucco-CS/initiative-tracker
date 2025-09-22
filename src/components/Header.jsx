@@ -96,6 +96,10 @@ const H1 = styled.h1`
   }}
   @media only screen and (max-width: ${breakpoints.md}) {
     font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 5.3em;
   }
 `;
 
@@ -234,7 +238,7 @@ const Header = ({ toggleDrawer }) => {
             aria-label="Toggle Notes"
             onClick={() => toggleDrawer(true)}
           >
-            <DescriptionOutlined />
+            <DescriptionOutlined fontSize="small" />
           </IconButton>
         </Tooltip>
       </NoteAction>
