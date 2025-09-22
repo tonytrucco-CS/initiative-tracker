@@ -226,7 +226,13 @@ const Header = ({ toggleDrawer }) => {
             </Flex>
           </>
         ) : (
-          <H1>
+          <H1
+            style={{
+              overflow: 'auto',
+              maxWidth: 'fit-content',
+              display: 'flex',
+            }}
+          >
             <Img src="/logo.png" alt="" />
             Pathfinder 2e Initiative Tracker
           </H1>
