@@ -8,15 +8,24 @@ import { Close } from '@mui/icons-material';
 const Div = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem;
+  gap: 0.5em;
+  padding: 1em;
   flex: 1;
+
+  @media only screen and (max-width: ${breakpoints.sm}) {
+    width: 100%;
+    padding: 0.5em;
+  }
 `;
 
 const H2 = styled.h2`
   margin: 0;
   padding: 0;
   color: ${colors.theme.light_gray};
+
+  @media only screen and (max-width: ${breakpoints.md}) {
+    font-size: 1rem;
+  }
 `;
 
 const TextArea = styled.textarea`
@@ -36,6 +45,11 @@ const TextArea = styled.textarea`
 
   @media only screen and (max-width: ${breakpoints.md}) {
     min-width: 20em;
+  }
+
+  @media only screen and (max-width: ${breakpoints.sm}) {
+    min-width: auto;
+    width: 100%;
   }
 
   &:focus {

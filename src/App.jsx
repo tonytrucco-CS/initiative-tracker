@@ -9,6 +9,7 @@ import { CssBaseline, Drawer, ThemeProvider } from '@mui/material';
 import ActionBar from './components/ActionBar';
 import { darkTheme } from './styles/Theme';
 import { INITIAL_VALUES } from './utils/constants';
+import { breakpoints } from './utils/variables';
 
 const Main = styled.main`
   margin: 0 0.5rem 0.5rem;
@@ -23,6 +24,14 @@ const Hidden = styled.span`
   height: 1px;
   user-select: none;
   pointer-events: none;
+`;
+
+const StyledDrawer = styled(Drawer)`
+  div.MuiPaper-root {
+    @media only screen and (max-width: ${breakpoints.sm}) {
+      width: 100%;
+    }
+  }
 `;
 
 function App() {
@@ -46,14 +55,14 @@ function App() {
           <Initiative />
           <ActionBar />
         </Main>
-        <Drawer
+        <StyledDrawer
           keepMounted
           open={open}
           onClose={() => toggleDrawer(false)}
           anchor="right"
         >
           <Notes toggleDrawer={toggleDrawer} />
-        </Drawer>
+        </StyledDrawer>
         <Hidden className="material-symbols-outlined" aria-hidden>
           skull
         </Hidden>
