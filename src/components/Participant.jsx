@@ -48,7 +48,7 @@ const Div = styled.div`
   }}
 `;
 
-const NameAndType = styled.span`
+const InputsFlex = styled.span`
   display: flex;
   align-items: center;
   flex: 1;
@@ -85,9 +85,8 @@ const Input = styled.input`
 const Initiative = styled.input`
   border-radius: 0.25rem;
   padding: 0.5rem;
-  height: 2.5rem;
-  width: 2.5rem;
-  text-align: right;
+  height: 2.5em;
+  width: 2.75em;
   font-size: 1rem;
   font-family: ${fonts.mono};
   font-weight: 800;
@@ -181,7 +180,7 @@ const Participant = ({ id, index, startDrag, topRef, botRef }) => {
       const updatedParticipants = [...prevInit.participants];
       updatedParticipants[index] = {
         ...updatedParticipants[index],
-        initiative: Number(e.target.value),
+        initiative: String(parseInt(e.target.value || 0, 10)),
       };
       return { ...prevInit, participants: updatedParticipants };
     });
@@ -263,8 +262,16 @@ const Participant = ({ id, index, startDrag, topRef, botRef }) => {
               />
             </Actions>
           )}
-          <NameAndType>
-            <TypeIcon type={type} />
+          <TypeIcon type={type} />
+          <InputsFlex>
+            <Initiative
+              $type={type}
+              type="number"
+              value={initiative}
+              name="Initiative"
+              onChange={(e) => handleInit(e)}
+              onClick={handleSelect}
+            />
             <Input
               type="text"
               placeholder="Name this Participant"
@@ -274,15 +281,7 @@ const Participant = ({ id, index, startDrag, topRef, botRef }) => {
               onClick={handleSelect}
               $type={type}
             />
-          </NameAndType>
-          <Initiative
-            $type={type}
-            type="number"
-            value={initiative}
-            name="Initiative"
-            onChange={(e) => handleInit(e)}
-            onClick={handleSelect}
-          />
+          </InputsFlex>
           <Tooltip title={`Remove ${name}`} enterDelay={300}>
             <IconButton
               aria-label="Remove Participant"

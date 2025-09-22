@@ -121,8 +121,8 @@ const ActionBar = () => {
       const updatedParticipants = [...prevInit.participants];
       const sortedParticipants = _.orderBy(
         updatedParticipants,
-        'initiative',
-        'desc',
+        [(p) => Number(p.initiative)],
+        ['desc'],
       );
       return {
         ...prevInit,
