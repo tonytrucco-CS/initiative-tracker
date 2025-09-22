@@ -132,9 +132,19 @@ const Initiative = styled.input`
     background-color: ${transparentize(0.9, colors.black)};
   }
 
+  &::selection {
+    color: ${(props) =>
+      props.$type === 'hazard' ? colors.black : colors.white};
+    background: ${transparentize(0.8, colors.black)};
+  }
+
   &:focus {
     outline: none;
     background-color: ${transparentize(0.75, colors.black)};
+    -webkit-text-fill-color: ${(props) =>
+      props.$type === 'hazard' ? colors.black : colors.white};
+    caret-color: ${(props) =>
+      props.$type === 'hazard' ? colors.black : colors.white};
   }
 `;
 
