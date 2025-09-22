@@ -54,13 +54,13 @@ const Row = React.forwardRef(({ children, dragging, index, id }, ref) => {
 
   // can we scroll the active player into view?
   useEffect(() => {
-    if (active === index) {
+    if (active === id) {
       viewRef.current.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
       });
     }
-  }, [active, index]);
+  }, [active, id]);
 
   return (
     <Flex $dragging={dragging} $index={index} $round={round} ref={ref}>
