@@ -219,6 +219,13 @@ export const CONDITIONS = [
     hint: "You have the off-guard and immobilized conditions, and you can't use any attack or manipulate actions except to attempt to Escape or Force Open your bonds. Restrained overrides grabbed.",
   },
   {
+    id: '239847239847-23432ff-fwefw-efwfwf',
+    name: 'Immobilized',
+    type: 'bad',
+    value: null,
+    hint: "You are incapable of movement. You can't use any actions that have the move trait. If you're immobilized by something holding you in place and an external force would move you out of your space, the force must succeed at a check against either the DC of the effect holding you in place or the relevant defense (usually Fortitude DC) of the monster holding you in place."
+  },
+  {
     id: 'e7d2a3b9-6c13-4f39-9a12-39c1f83e9c01',
     name: 'Quickened',
     type: 'good',
